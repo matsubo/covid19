@@ -1,19 +1,72 @@
 ---
 import BaseLayout from "@/layouts/base.astro";
-import { getEntry } from "astro:content";
-import Headlines from "@/pages/_home/headlines.astro";
-import LatestNews from "@/pages/_home/latestNews.astro";
-import Authors from "@/pages/_home/authors.astro";
 
-const entry = await getEntry("views", "home");
-
-if (!entry) {
-  return Astro.redirect("/404");
-}
+const meta = {
+  title: "新型コロナウイルス新規陽性者数の遷移グラフ",
+  metaTitle: "ホーム",
+  description: "各都道府県が提供しているオープンデータをグラフ化",
+  type: "website" as const,
+  ogImage: "/og-image.png",
+  ogImageAlt: "新型コロナウイルス新規陽性者数の遷移グラフ",
+};
 ---
 
-<BaseLayout entry={entry}>
-  <Headlines />
-  <LatestNews />
-  <Authors />
+<BaseLayout entry={{ meta }}>
+  <div class="container mx-auto px-4 py-12">
+    <div class="max-w-4xl mx-auto text-center">
+      <h1 class="text-5xl font-bold mb-6">
+        新型コロナウイルス<br />新規陽性者数の遷移グラフ
+      </h1>
+      <p class="text-xl text-gray-600 dark:text-gray-300 mb-8">
+        各都道府県が提供しているオープンデータをグラフ化
+      </p>
+      <p class="text-lg mb-12">
+        2020年8月から2022年10月まで、日本の一部都道府県の新型コロナウイルス新規陽性者数を<br />
+        グラフ化して毎日投稿してきました。
+      </p>
+
+      <div class="grid md:grid-cols-2 gap-6 mt-12">
+        <a
+          href="/prefecture/tokyo"
+          class="block p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg hover:shadow-xl transition-shadow"
+        >
+          <h2 class="text-2xl font-bold mb-2">東京都</h2>
+          <p class="text-gray-600 dark:text-gray-300">672件の記事</p>
+        </a>
+
+        <a
+          href="/prefecture/kanagawa"
+          class="block p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg hover:shadow-xl transition-shadow"
+        >
+          <h2 class="text-2xl font-bold mb-2">神奈川県</h2>
+          <p class="text-gray-600 dark:text-gray-300">660件の記事</p>
+        </a>
+
+        <a
+          href="/prefecture/ishikawa"
+          class="block p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg hover:shadow-xl transition-shadow"
+        >
+          <h2 class="text-2xl font-bold mb-2">石川県</h2>
+          <p class="text-gray-600 dark:text-gray-300">568件の記事</p>
+        </a>
+
+        <a
+          href="/prefecture/fukui"
+          class="block p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg hover:shadow-xl transition-shadow"
+        >
+          <h2 class="text-2xl font-bold mb-2">福井県</h2>
+          <p class="text-gray-600 dark:text-gray-300">507件の記事</p>
+        </a>
+      </div>
+
+      <div class="mt-12">
+        <a
+          href="/history"
+          class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition-colors"
+        >
+          サイトの歩みを見る
+        </a>
+      </div>
+    </div>
+  </div>
 </BaseLayout>

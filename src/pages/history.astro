@@ -1,0 +1,111 @@
+---
+import BaseLayout from "@/layouts/base.astro";
+import ContentLayout from "@/layouts/content.astro";
+
+const meta = {
+  title: "サイトの歩み - 新型コロナウイルス新規陽性者数の遷移グラフ",
+  metaTitle: "サイトの歩み",
+  description: "新型コロナウイルス新規陽性者数の遷移グラフサイトの歩みと更新停止のお知らせ",
+  type: "website" as const,
+  ogImage: "/images/history/ojigi_animal_kuma.png",
+  ogImageAlt: "サイトの歩み",
+};
+---
+
+<BaseLayout entry={{ meta }}>
+  <ContentLayout>
+    <article class="prose prose-lg max-w-none">
+      <header class="mb-8">
+        <h1 class="text-4xl font-bold mb-4">サイトの歩み</h1>
+        <p class="text-gray-600 dark:text-gray-400">2022年10月14日</p>
+      </header>
+
+      <div class="mb-8">
+        <img
+          src="/images/history/ojigi_animal_kuma.png"
+          alt="更新停止のお知らせ"
+          class="mx-auto rounded-lg shadow-lg max-w-md"
+        />
+      </div>
+
+      <section class="space-y-6">
+        <div>
+          <h2 class="text-3xl font-bold mb-4">概要</h2>
+          <p class="text-lg">
+            2020年8月から一部の各都道府県の発表する新型コロナウィルスの陽性者数をグラフでわかりやすく毎日投稿するサービスを続けてきましたが、<strong>更新を停止</strong>致します。
+          </p>
+        </div>
+
+        <div>
+          <h2 class="text-3xl font-bold mb-4">更新停止の理由</h2>
+          <ul class="list-disc list-inside space-y-2 text-lg">
+            <li>
+              各都道府県が公開する新規陽性者のURLが頻繁に変更されるのでそれに追随するのが大変。
+              <ul class="list-disc list-inside ml-6 mt-2 space-y-1">
+                <li>例: URLのフォーマットが毎回ランダムにファイルが分割される。</li>
+                <li>例: 毎日提供されるURLが変わる</li>
+              </ul>
+            </li>
+            <li>そもそも新規陽性者数をCSVデータで提供している都道府県が一部のみ。</li>
+            <li>
+              <a
+                href="https://docs.google.com/spreadsheets/d/1fJtqxqh_4OuUwq2LQ_WRx23fwcEB4hNL/edit#gid=1874865803"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-blue-600 hover:text-blue-800 underline"
+              >
+                公開するデータのフォーマット
+              </a>が決まっているにも関わらず、異なる粒度や異なるメトリックのデータを提供している。
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h2 class="text-3xl font-bold mb-4">感想</h2>
+          <ul class="list-disc list-inside space-y-2 text-lg">
+            <li>都道府県の行政機関のデジタルにおけるリテラシーの低さに悲しくなった。</li>
+            <li>
+              オープンデータといいながら、<strong>一部の都道府県しかオープンにしていない</strong>し<strong>各都道府県でデータフォーマットが異なっている</strong>という実態。
+            </li>
+            <li>
+              本来なら、<strong>各都道府県が発表するCSVを全部集計すれば日本の陽性者数が出る</strong>のに残念です。
+            </li>
+            <li>
+              2020年という最近に仕様が決まって、それに伴ってシステムも作っているはずなのに運用を<strong>開始して2年間でこのような状況になっているのは悲しい</strong>です。
+            </li>
+            <li>
+              COCOA、マイナンバーや自治体で導入されているシステムの惨事のニュースを目にすることがあり、<strong>行政のシステム関連の開発、運用には大きな問題</strong>があると感じる。
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h2 class="text-3xl font-bold mb-4">ソースコード</h2>
+          <p class="text-lg">
+            CSVデータからのグラフ生成、Wordpressへの投稿、Twitterへの投稿を行うプログラムのソースコードはこちらに置いておきます。
+          </p>
+          <p class="mt-4">
+            <a
+              href="https://github.com/matsubo/covid19-daily-tweet"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-block bg-gray-800 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition-colors"
+            >
+              <svg class="inline-block w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.840 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.430.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+              </svg>
+              GitHub でソースコードを見る
+            </a>
+          </p>
+        </div>
+
+        <div class="border-t pt-6 mt-8">
+          <p class="text-gray-600 dark:text-gray-400 text-sm">
+            このサイトは2020年8月から2022年10月まで、日本の一部都道府県の新型コロナウイルス新規陽性者数をグラフ化して提供してきました。
+            多くの方にご利用いただき、ありがとうございました。
+          </p>
+        </div>
+      </section>
+    </article>
+  </ContentLayout>
+</BaseLayout>

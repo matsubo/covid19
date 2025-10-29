@@ -1,99 +1,66 @@
 import type { Link } from "../types";
 
 export const SITE = {
-  title: "Astro News",
-  description: "A news website built with Astro",
-  author: "Mohammad Rahmani",
-  url: "https://astro-news-six.vercel.app",
-  github: "https://github.com/Mrahmani71/astro-news",
-  locale: "en-US",
+  title: "新型コロナウイルス新規陽性者数の遷移グラフ",
+  description: "各都道府県が提供しているオープンデータをグラフ化",
+  author: "matsubo",
+  url: "https://covid19.teraren.com",
+  github: "https://github.com/matsubo/covid19",
+  locale: "ja-JP",
   dir: "ltr",
   charset: "UTF-8",
   basePath: "/",
-  postsPerPage: 4,
+  postsPerPage: 20,
 };
 
+// 都道府県ナビゲーションリンク
 export const NAVIGATION_LINKS: Link[] = [
   {
-    href: "/categories/technology",
-    text: "Technology",
+    href: "/prefecture/tokyo",
+    text: "東京都",
   },
   {
-    href: "/categories/programming",
-    text: "Programming",
+    href: "/prefecture/kanagawa",
+    text: "神奈川県",
   },
   {
-    href: "/categories/lifestyle",
-    text: "Lifestyle",
+    href: "/prefecture/osaka",
+    text: "大阪府",
   },
   {
-    href: "/categories/productivity",
-    text: "Productivity",
+    href: "/prefecture/hokkaido",
+    text: "北海道",
   },
   {
-    href: "/categories/health",
-    text: "Health",
+    href: "/prefecture/fukuoka",
+    text: "福岡県",
   },
   {
-    href: "/categories/finance",
-    text: "Finance",
+    href: "/archives/1",
+    text: "すべての記事",
   },
 ];
 
 export const OTHER_LINKS: Link[] = [
   {
-    href: "/about",
-    text: "About us",
+    href: "/history",
+    text: "サイトの歩み",
   },
   {
-    href: "/authors",
-    text: "Authors",
-  },
-  {
-    href: "/contact",
-    text: "Contact",
-  },
-  {
-    href: "/privacy",
-    text: "Privacy",
-  },
-  {
-    href: "/terms",
-    text: "Terms",
-  },
-  {
-    href: "/cookie-policy",
-    text: "Cookie Policy",
-  },
-  {
-    href: "https://astro-news-six.vercel.app/rss.xml",
-    text: "RSS",
-  },
-  {
-    href: "https://astro-news-six.vercel.app/sitemap-index.xml",
-    text: "Sitemap",
+    href: "https://github.com/matsubo/covid19-daily-tweet",
+    text: "ソースコード",
   },
 ];
 
 export const SOCIAL_LINKS: Link[] = [
   {
-    href: "https://github.com",
+    href: "https://github.com/matsubo/covid19",
     text: "GitHub",
     icon: "github",
   },
   {
-    href: "httpe://www.t.me",
-    text: "Telegram",
-    icon: "telegram",
-  },
-  {
-    href: "https://twitter.com",
+    href: "https://twitter.com/matsubo",
     text: "Twitter",
     icon: "newTwitter",
-  },
-  {
-    href: "https://www.facebook.com",
-    text: "Facebook",
-    icon: "facebook",
   },
 ];
