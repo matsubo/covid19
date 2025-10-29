@@ -1,0 +1,81 @@
+---
+import Layout from "@/layouts/base.astro";
+import type { Meta } from "@/lib/types";
+import { SITE } from "@/lib/config";
+
+const meta: Meta = {
+  title: `404 - ページが見つかりません | ${SITE.title}`,
+  metaTitle: `404 - ページが見つかりません`,
+  description: "お探しのページは見つかりませんでした",
+  type: "website",
+  ogImage: "/images/default-image.jpg",
+  ogImageAlt: "404エラー",
+};
+
+const entry = {
+  meta,
+};
+---
+
+<Layout entry={entry}>
+  <main class="container mx-auto px-4 py-16">
+    <div class="max-w-2xl mx-auto text-center">
+      <!-- 404イラスト -->
+      <div class="mb-8">
+        <svg class="w-48 h-48 mx-auto text-gray-300 dark:text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="0.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+
+      <!-- エラーメッセージ -->
+      <h1 class="text-6xl font-bold text-gray-900 dark:text-gray-100 mb-4">404</h1>
+      <p class="text-2xl font-semibold text-gray-700 dark:text-gray-300 mb-2">
+        ページが見つかりません
+      </p>
+      <p class="text-gray-600 dark:text-gray-400 mb-8">
+        お探しのページは存在しないか、移動または削除された可能性があります。
+      </p>
+
+      <!-- アクションボタン -->
+      <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+        <a 
+          href="/" 
+          class="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg transition-colors duration-200 inline-flex items-center gap-2"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+          </svg>
+          ホームに戻る
+        </a>
+        
+        <a 
+          href="/search" 
+          class="px-6 py-3 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-semibold rounded-lg border border-gray-300 dark:border-gray-600 transition-colors duration-200 inline-flex items-center gap-2"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+          </svg>
+          サイト内を検索
+        </a>
+      </div>
+
+      <!-- 役立つリンク -->
+      <div class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">よくアクセスされるページ:</p>
+        <div class="flex flex-wrap gap-3 justify-center">
+          <a href="/history" class="text-sm text-indigo-600 dark:text-indigo-400 hover:underline">
+            履歴ページ
+          </a>
+          <span class="text-gray-300 dark:text-gray-600">•</span>
+          <a href="/archives" class="text-sm text-indigo-600 dark:text-indigo-400 hover:underline">
+            アーカイブ
+          </a>
+          <span class="text-gray-300 dark:text-gray-600">•</span>
+          <a href="/prefecture/tokyo" class="text-sm text-indigo-600 dark:text-indigo-400 hover:underline">
+            東京都のデータ
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+</Layout>
