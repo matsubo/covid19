@@ -1,7 +1,7 @@
 import type { Link } from "../types";
 
 export const SITE = {
-  title: "新型コロナウイルス新規陽性者数の遷移グラフ",
+  title: "COVID-19 新規陽性者数の遷移グラフ",
   description: "各都道府県が提供しているオープンデータをグラフ化",
   author: "matsubo",
   url: "https://covid19.teraren.com",
@@ -95,8 +95,12 @@ export const NAVIGATION_LINKS: Link[] = [
 
 export const OTHER_LINKS: Link[] = [
   {
+    href: "/search",
+    text: "全文検索",
+  },
+  {
     href: "/history",
-    text: "サイトの歩み",
+    text: "更新停止理由と履歴",
   },
   {
     href: "https://github.com/matsubo/covid19-daily-tweet",
@@ -110,12 +114,12 @@ export const OTHER_LINKS: Link[] = [
 
 export const SOCIAL_LINKS: Link[] = [
   {
-    href: "https://github.com/matsubo/covid19",
-    text: "GitHub",
-    icon: "github",
+    href: "https://matsubo.github.io/",
+    text: "Personal Website",
+    icon: "earth",
   },
   {
-    href: "https://x.com/matsubo",
+    href: "https://x.com/matsubokkuri",
     text: "Twitter",
     icon: "newTwitter",
   },
