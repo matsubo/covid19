@@ -26,13 +26,13 @@ git clone https://github.com/Mrahmani71/astro-news.git
 ### Install Dependencies
 
 ``` bash
-bun install
+pnpm install
 ```
 
 ### Run Development Server
 
 ```bash
-bun dev
+pnpm run dev
 ```
 
 ### Running Keystatic CMS
@@ -44,7 +44,7 @@ bun dev
 3. Start the development server:
 
  ```bash
-    bun dev 
+    pnpm run dev
   ```
 
 4. Open `http://localhost:4321/keystatic` in your browser.
@@ -78,7 +78,7 @@ This project leverages cutting-edge web technologies:
 - [DaisyUI](https://daisyui.com/) - Tailwind CSS component library
 - [TypeScript](https://typescriptlang.org) - Typed JavaScript
 - [MDX](https://mdxjs.com) - Markdown with JSX support
-- [Bun V1.2.10](https://bun.sh) - Fast JavaScript runtime
+- [pnpm](https://pnpm.io) - Fast, disk space efficient package manager
 - [Vercel](https://vercel.com) - Deployment platform
 - [HugeIcons](https://hugeicons.com) - Icon library
 
