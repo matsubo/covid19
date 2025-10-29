@@ -37,6 +37,44 @@ const meta = {
         </div>
 
         <div>
+          <h2 class="text-3xl font-bold mb-4">サイト作成の背景</h2>
+          <h3 class="text-2xl font-semibold mb-3">問題意識</h3>
+          <p class="text-lg mb-4">
+            新型コロナウイルスの感染状況について、以下のような課題を感じていました。
+          </p>
+          <ul class="list-disc list-inside space-y-2 text-lg mb-6">
+            <li>
+              <strong>データの可視化不足</strong>: 各都道府県が公開するデータは<strong>CSVファイル形式のみ</strong>で、一般の方がデータの傾向を把握するのが困難。
+            </li>
+            <li>
+              <strong>大局観の欠如</strong>: テレビやニュースでは日々の増減数だけが報道され、<strong>長期的な推移や傾向が見えにくい</strong>状況。
+            </li>
+            <li>
+              <strong>年代別情報の不足</strong>: 全体の陽性者数だけでなく、<strong>年代ごとの感染状況も同時に把握したい</strong>というニーズ。
+            </li>
+          </ul>
+          
+          <h3 class="text-2xl font-semibold mb-3">このサイトが目指したもの</h3>
+          <p class="text-lg mb-4">
+            既存のメディアでは、自分が必要とする情報を適切な形で提供しているものがありませんでした。そこで、同じ問題意識を持つ方々のために、このサービスを作ることを決意しました。
+          </p>
+          <ul class="list-disc list-inside space-y-2 text-lg mb-6">
+            <li>
+              <strong>視覚的にわかりやすいグラフ</strong>を毎日自動生成し、時系列での変化を一目で把握できるようにする。
+            </li>
+            <li>
+              <strong>Webサイトでアーカイブ</strong>として保存し、過去のデータもいつでも参照できるようにする。
+            </li>
+            <li>
+              <strong>X（旧Twitter）で発信</strong>することで、タイムリーに情報を届ける。
+            </li>
+          </ul>
+          <p class="text-lg mb-4">
+            当初は全都道府県のXアカウントを作成する計画でしたが、アカウント作成の制限があったため、<strong>人口の多い主要都道府県に絞って</strong>運用することにしました。
+          </p>
+        </div>
+
+        <div>
           <h2 class="text-3xl font-bold mb-4">更新停止の理由</h2>
           <ul class="list-disc list-inside space-y-2 text-lg">
             <li>
@@ -115,12 +153,35 @@ const meta = {
           </p>
         </div>
 
-        <div class="border-t pt-6 mt-8">
-          <p class="text-gray-600 dark:text-gray-400 text-sm">
-            このサイトは2020年8月から2022年10月まで、日本の一部都道府県の新型コロナウイルス新規陽性者数をグラフ化して提供してきました。
-            多くの方にご利用いただき、ありがとうございました。
-          </p>
-        </div>
+      <div>
+        <h2 class="text-3xl font-bold mb-4">WordPressからAstroへの移行</h2>
+        <p class="text-gray-600 dark:text-gray-400 mb-4">2025年10月30日</p>
+        <p class="text-lg mb-4">
+          更新停止から約3年後、アーカイブサイトとしての価値を維持し、より高速で効率的な閲覧環境を提供するため、<strong>WordPressからAstro</strong>へサイトを移行しました。
+        </p>
+        <h3 class="text-2xl font-semibold mb-3">移行の目的</h3>
+        <ul class="list-disc list-inside space-y-2 text-lg mb-4">
+          <li>静的サイト生成による高速化とセキュリティ向上</li>
+          <li>サーバー維持コストの削減</li>
+          <li>長期的なアーカイブとしての安定性確保</li>
+          <li>モダンな開発環境への移行</li>
+        </ul>
+        <h3 class="text-2xl font-semibold mb-3">技術スタック</h3>
+        <ul class="list-disc list-inside space-y-2 text-lg">
+          <li><strong>Astro</strong>: 静的サイトジェネレーター</li>
+          <li><strong>TypeScript</strong>: 型安全性の向上</li>
+          <li><strong>Tailwind CSS</strong>: スタイリング</li>
+          <li>過去の記事データとグラフ画像は全て保持</li>
+        </ul>
+      </div>
+
+      <div class="border-t pt-6 mt-8">
+        <p class="text-gray-600 dark:text-gray-400 text-sm">
+          このサイトは2020年8月から2022年10月まで、日本の一部都道府県の新型コロナウイルス新規陽性者数をグラフ化して提供してきました。
+          2025年10月にAstroへ移行し、アーカイブサイトとして情報を保存しています。
+          多くの方にご利用いただき、ありがとうございました。
+        </p>
+      </div>
       </section>
     </article>
   </ContentLayout>
