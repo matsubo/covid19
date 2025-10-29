@@ -1,0 +1,30 @@
+---
+type Props = {
+  src: string;
+  alt: string;
+  title?: string;
+};
+
+const { src, alt, title } = Astro.props;
+---
+
+<figure class="my-8">
+  {title && (
+    <div class="text-center mb-4">
+      <h3 class="text-xl font-bold">{title}</h3>
+    </div>
+  )}
+  <div class="rounded-lg overflow-hidden shadow-lg bg-white dark:bg-gray-800">
+    <img
+      src={src}
+      alt={alt}
+      class="w-full h-auto"
+      loading="lazy"
+    />
+  </div>
+  {alt && (
+    <figcaption class="text-center text-sm text-gray-500 dark:text-gray-400 mt-2">
+      {alt}
+    </figcaption>
+  )}
+</figure>

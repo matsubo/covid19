@@ -77,10 +77,12 @@ const OGImage = new URL(meta.ogImage, Astro.url).href;
           property="article:published_time"
           content={new Date(meta.publishedTime).toISOString()}
         />
-        <meta
-          property="article:modified_time"
-          content={new Date(meta.lastModified).toISOString()}
-        />
+        {meta.lastModified && (
+          <meta
+            property="article:modified_time"
+            content={new Date(meta.lastModified).toISOString()}
+          />
+        )}
 
         {meta.authors.map((author) => (
           <>

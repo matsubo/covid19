@@ -1,0 +1,188 @@
+---
+import BaseLayout from "@/layouts/base.astro";
+import ArticleCard from "@/components/covid19/ArticleCard.astro";
+import { covid19Handler } from "@/lib/handlers/covid19";
+import { getPrefectureName, isValidPrefecture, getAllPrefectures } from "@/lib/utils/prefecture";
+import { SITE } from "@/lib/config";
+
+export async function getStaticPaths() {
+  const prefectures = getAllPrefectures();
+  const paths = [];
+
+  for (const prefecture of prefectures) {
+    const articles = await covid19Handler.articlesByPrefecture(prefecture.slug);
+    const totalPages = Math.ceil(articles.length / SITE.postsPerPage);
+
+    // ページ1のパスを生成（/prefecture/tokyo と /prefecture/tokyo/1 の両方）
+    paths.push({
+      params: {
+        prefecture: prefecture.slug,
+        page: undefined,
+      },
+      props: {
+        articles: articles.slice(0, SITE.postsPerPage),
+        currentPage: 1,
+        totalPages,
+        totalArticles: articles.length,
+        prefectureSlug: prefecture.slug,
+        prefectureName: prefecture.name,
+      },
+    });
+
+    // ページ2以降のパスを生成
+    for (let i = 2; i <= totalPages; i++) {
+      const start = (i - 1) * SITE.postsPerPage;
+      const end = start + SITE.postsPerPage;
+
+      paths.push({
+        params: {
+          prefecture: prefecture.slug,
+          page: i.toString(),
+        },
+        props: {
+          articles: articles.slice(start, end),
+          currentPage: i,
+          totalPages,
+          totalArticles: articles.length,
+          prefectureSlug: prefecture.slug,
+          prefectureName: prefecture.name,
+        },
+      });
+    }
+  }
+
+  return paths;
+}
+
+const {
+  articles,
+  currentPage,
+  totalPages,
+  totalArticles,
+  prefectureSlug,
+  prefectureName,
+} = Astro.props;
+
+// メタ情報
+const meta = {
+  title: `${prefectureName}の新型コロナウイルス新規陽性者数グラフ`,
+  description: `${prefectureName}の新型コロナウイルス新規陽性者数の推移グラフ一覧（${totalArticles}件の記事）`,
+  type: "website" as const,
+};
+
+// ページネーション用のURL生成
+function getPageUrl(page: number): string {
+  if (page === 1) {
+    return `/prefecture/${prefectureSlug}`;
+  }
+  return `/prefecture/${prefectureSlug}/${page}`;
+}
+
+// 表示するページ番号を計算
+const visiblePages: (number | 'ellipsis')[] = [];
+const allPages = Array.from({ length: totalPages }, (_, i) => i + 1);
+
+for (const page of allPages) {
+  const shouldShow =
+    page === 1 ||
+    page === totalPages ||
+    Math.abs(page - currentPage) <= 2;
+
+  if (shouldShow) {
+    visiblePages.push(page);
+  } else if (
+    visiblePages[visiblePages.length - 1] !== 'ellipsis' &&
+    (page === currentPage - 3 || page === currentPage + 3)
+  ) {
+    visiblePages.push('ellipsis');
+  }
+}
+---
+
+<BaseLayout entry={{ meta }}>
+  <div class="container mx-auto px-4 py-12">
+    <!-- ヘッダー -->
+    <header class="mb-12 text-center">
+      <nav class="breadcrumbs text-sm mb-4 justify-center">
+        <ul>
+          <li><a href="/">ホーム</a></li>
+          <li>{prefectureName}</li>
+        </ul>
+      </nav>
+      <h1 class="text-5xl font-bold mb-4">{prefectureName}</h1>
+      <p class="text-xl text-gray-600 dark:text-gray-300">
+        新型コロナウイルス新規陽性者数の推移グラフ
+      </p>
+      <p class="text-lg mt-2">
+        全{totalArticles}件の記事
+      </p>
+    </header>
+
+    <!-- 記事一覧 -->
+    {articles.length > 0 ? (
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+        {articles.map((article) => (
+          <ArticleCard article={article} />
+        ))}
+      </div>
+    ) : (
+      <div class="text-center py-12">
+        <p class="text-gray-500 dark:text-gray-400 text-lg">
+          記事がありません
+        </p>
+      </div>
+    )}
+
+    <!-- ページネーション -->
+    {totalPages > 1 && (
+      <nav class="flex justify-center mt-12">
+        <div class="join">
+          {/* 前のページ */}
+          {currentPage > 1 ? (
+            <a
+              href={getPageUrl(currentPage - 1)}
+              class="join-item btn btn-outline"
+            >
+              «
+            </a>
+          ) : (
+            <button class="join-item btn btn-outline btn-disabled">«</button>
+          )}
+
+          {/* ページ番号 */}
+          {visiblePages.map((item, idx) => {
+            if (item === 'ellipsis') {
+              return (
+                <button key={`ellipsis-${idx}`} class="join-item btn btn-outline btn-disabled">
+                  ...
+                </button>
+              );
+            }
+
+            return (
+              <a
+                key={item}
+                href={getPageUrl(item)}
+                class={`join-item btn ${item === currentPage ? "btn-active" : "btn-outline"}`}
+              >
+                {item}
+              </a>
+            );
+          })}
+
+          {/* 次のページ */}
+          {currentPage < totalPages ? (
+            <a
+              href={getPageUrl(currentPage + 1)}
+              class="join-item btn btn-outline"
+            >
+              »
+            </a>
+          ) : (
+            <button class="join-item btn btn-outline btn-disabled">»</button>
+          )}
+        </div>
+      </nav>
+    )}
+  </div>
+</BaseLayout>

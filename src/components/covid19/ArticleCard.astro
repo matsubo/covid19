@@ -1,0 +1,104 @@
+---
+import type { Covid19Entry } from "@/lib/handlers/covid19";
+import { getPrefectureName } from "@/lib/utils/prefecture";
+
+type Props = {
+  article: Covid19Entry;
+};
+
+const { article } = Astro.props;
+const { data, id } = article;
+
+// 日付をフォーマット（ゼロ埋めなし）
+const date = new Date(data.publishedTime);
+const year = date.getFullYear();
+const month = date.getMonth() + 1;
+const day = date.getDate();
+const monthPadded = String(month).padStart(2, "0");
+const dayPadded = String(day).padStart(2, "0");
+
+// WordPress互換URLを構築
+// ID format: "2022/09/fukui-478" -> slug: "fukui-478"
+const slug = id.split('/').pop();
+const url = `/${year}/${monthPadded}/${dayPadded}/${slug}`;
+
+// 都道府県名を取得
+const prefectureName = getPrefectureName(data.prefecture);
+---
+
+<article class="group relative card bg-white dark:bg-gray-800 shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 dark:border-gray-700">
+  <!-- グラデーションオーバーレイ -->
+  <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/0 to-purple-500/0 group-hover:from-indigo-500/5 group-hover:to-purple-500/5 transition-all duration-300 pointer-events-none z-10"></div>
+  
+  <a href={url} class="block">
+    <figure class="relative aspect-video overflow-hidden">
+      <img
+        src={data.coverImage}
+        alt={data.title}
+        class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+        loading="lazy"
+      />
+      <!-- 画像オーバーレイ -->
+      <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+      
+      <!-- 都道府県バッジ（画像上） -->
+      <div class="absolute top-4 left-4 z-20">
+        <span class="badge badge-lg bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm text-indigo-600 dark:text-indigo-400 border-none font-semibold shadow-lg">
+          {prefectureName}
+        </span>
+      </div>
+    </figure>
+  </a>
+  
+  <div class="card-body relative z-10">
+    <!-- 日付 -->
+    <div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-2">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+      </svg>
+      <time datetime={date.toISOString()} class="font-medium">
+        {year}年{month}月{day}日
+      </time>
+    </div>
+    
+    <!-- タイトル -->
+    <h2 class="card-title text-lg mb-3 line-clamp-2">
+      <a href={url} class="hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-indigo-600 hover:to-purple-600 dark:hover:from-indigo-400 dark:hover:to-purple-400 transition-all duration-300">
+        {data.title}
+      </a>
+    </h2>
+    
+    <!-- 説明文 -->
+    <p class="text-sm text-gray-600 dark:text-gray-300 line-clamp-2 mb-4 flex-grow">
+      {data.description}
+    </p>
+    
+    <!-- アクションボタン -->
+    <div class="card-actions justify-between items-center mt-auto pt-4 border-t border-gray-100 dark:border-gray-700">
+      <a 
+        href={url} 
+        class="btn btn-primary btn-sm group/btn relative overflow-hidden"
+      >
+        <span class="relative z-10 flex items-center gap-2">
+          グラフを見る
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transform group-hover/btn:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </span>
+      </a>
+      
+      <!-- 共有ボタン（オプション） -->
+      <button 
+        class="btn btn-ghost btn-sm btn-circle"
+        aria-label="共有"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ボトムアクセント -->
+  <div class="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+</article>

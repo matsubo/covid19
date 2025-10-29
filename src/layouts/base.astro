@@ -3,26 +3,93 @@ import { SITE } from "@/lib/config";
 import Head from "@/components/bases/head.astro";
 import Header from "@/components/shared/header.astro";
 import Footer from "@/components/shared/footer.astro";
-import type { Entry } from "@/lib/types";
-import { getMeta } from "@/lib/utils/getMeta";
 
 type Props = {
-  entry: Entry;
+  entry: {
+    meta: any;
+  };
 };
 
 const { entry } = Astro.props;
-
-const meta = await getMeta(entry);
+const meta = entry.meta;
 ---
 
 <!doctype html>
-<html lang={SITE.locale} dir={SITE.dir}>
+<html lang={SITE.locale} dir={SITE.dir} class="scroll-smooth">
   <Head meta={meta} />
-  <body class="flex flex-col">
-    <Header />
-    <main class="flex-1">
-      <slot />
-    </main>
-    <Footer />
+  <body class="flex flex-col min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
+    <!-- 背景グラデーション装飾 -->
+    <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+      <div class="absolute -top-40 -right-40 w-96 h-96 bg-purple-300 dark:bg-purple-900/30 rounded-full mix-blend-multiply dark:mix-blend-soft-light filter blur-3xl opacity-20 animate-blob"></div>
+      <div class="absolute -bottom-40 -left-40 w-96 h-96 bg-indigo-300 dark:bg-indigo-900/30 rounded-full mix-blend-multiply dark:mix-blend-soft-light filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-pink-300 dark:bg-pink-900/30 rounded-full mix-blend-multiply dark:mix-blend-soft-light filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
+    </div>
+
+    <!-- メインコンテンツ -->
+    <div class="relative z-10 flex flex-col min-h-screen">
+      <Header />
+      <main class="flex-1">
+        <slot />
+      </main>
+      <Footer />
+    </div>
+
+    <!-- ページトップへ戻るボタン -->
+    <button
+      id="scroll-to-top"
+      class="fixed bottom-8 right-8 z-50 btn btn-circle btn-primary shadow-2xl opacity-0 pointer-events-none transition-all duration-300 hover:scale-110"
+      aria-label="ページトップへ戻る"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+      </svg>
+    </button>
+
+    <script>
+      // ページトップへ戻るボタンの制御
+      const scrollToTopBtn = document.getElementById('scroll-to-top');
+      
+      function toggleScrollButton() {
+        if (window.scrollY > 300) {
+          scrollToTopBtn?.classList.remove('opacity-0', 'pointer-events-none');
+          scrollToTopBtn?.classList.add('opacity-100', 'pointer-events-auto');
+        } else {
+          scrollToTopBtn?.classList.add('opacity-0', 'pointer-events-none');
+          scrollToTopBtn?.classList.remove('opacity-100', 'pointer-events-auto');
+        }
+      }
+
+      window.addEventListener('scroll', toggleScrollButton);
+      
+      scrollToTopBtn?.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    </script>
+
+    <style>
+      @keyframes blob {
+        0%, 100% {
+          transform: translate(0, 0) scale(1);
+        }
+        33% {
+          transform: translate(30px, -50px) scale(1.1);
+        }
+        66% {
+          transform: translate(-20px, 20px) scale(0.9);
+        }
+      }
+
+      .animate-blob {
+        animation: blob 7s infinite;
+      }
+
+      .animation-delay-2000 {
+        animation-delay: 2s;
+      }
+
+      .animation-delay-4000 {
+        animation-delay: 4s;
+      }
+    </style>
   </body>
 </html>

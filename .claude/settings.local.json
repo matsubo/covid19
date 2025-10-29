@@ -10,7 +10,8 @@
       "mcp__playwright__browser_close",
       "Bash(node scripts/migrate-covid19.mjs:*)",
       "Bash(pnpm run build)",
-      "Read(//private/tmp/**)"
+      "Read(//private/tmp/**)",
+      "Bash(pkill:*)"
     ],
     "deny": [],
     "ask": []

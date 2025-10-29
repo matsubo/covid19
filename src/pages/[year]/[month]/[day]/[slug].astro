@@ -1,0 +1,178 @@
+---
+import BaseLayout from "@/layouts/base.astro";
+import DataChart from "@/components/covid19/DataChart.astro";
+import { getCollection } from "astro:content";
+import { getPrefectureName } from "@/lib/utils/prefecture";
+import { covid19Handler } from "@/lib/handlers/covid19";
+
+export async function getStaticPaths() {
+  const allArticles = await getCollection("covid19");
+
+  return allArticles.map((article) => {
+    const date = new Date(article.data.publishedTime);
+    const year = date.getFullYear().toString();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+
+    // Extract just the filename from the ID (remove year/month directory path)
+    // ID format: "2022/09/fukui-478" -> slug: "fukui-478"
+    const slug = article.id.split('/').pop();
+
+    return {
+      params: {
+        year,
+        month,
+        day,
+        slug,
+      },
+      props: {
+        // Pass only serializable data, not the whole article object
+        data: {
+          title: article.data.title,
+          description: article.data.description,
+          prefecture: article.data.prefecture,
+          coverImage: article.data.coverImage,
+          publishedTime: article.data.publishedTime,
+        },
+        id: article.id,
+        year,
+        month,
+        day,
+      },
+    };
+  });
+}
+
+// Get data from props
+const { data, id, year, month, day } = Astro.props;
+
+if (!data) {
+  return Astro.redirect('/404');
+}
+
+// 都道府県名を取得
+const prefectureName = getPrefectureName(data.prefecture);
+
+// 記事オブジェクトを再取得して前後の記事を取得
+const currentArticle = await covid19Handler.articleById(id);
+const adjacentArticles = currentArticle ? await covid19Handler.adjacentArticles(currentArticle) : { prev: null, next: null };
+
+// 前後の記事のURL生成関数
+function getArticleUrl(article: any) {
+  if (!article) return null;
+  const date = new Date(article.data.publishedTime);
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  const slug = article.id.split('/').pop();
+  return `/${y}/${m}/${d}/${slug}`;
+}
+
+const prevUrl = getArticleUrl(adjacentArticles.prev);
+const nextUrl = getArticleUrl(adjacentArticles.next);
+
+// メタ情報
+const meta = {
+  title: data.title,
+  metaTitle: data.title,
+  description: data.description,
+  type: "website" as const,
+  ogImage: data.coverImage,
+  ogImageAlt: data.title,
+};
+
+// 都道府県ページへのリンク
+const prefectureUrl = `/prefecture/${data.prefecture}`;
+---
+
+<BaseLayout entry={{ meta }}>
+  <article class="container mx-auto px-4 py-12 max-w-4xl">
+    <!-- パンくずナビゲーション -->
+    <nav class="breadcrumbs text-sm mb-8">
+      <ul>
+        <li><a href="/">ホーム</a></li>
+        <li><a href={prefectureUrl}>{prefectureName}</a></li>
+        <li>{year}年{month}月{day}日</li>
+      </ul>
+    </nav>
+
+    <!-- 記事ヘッダー -->
+    <header class="mb-8">
+      <div class="flex items-center gap-3 mb-4">
+        <a href={prefectureUrl} class="badge badge-primary badge-lg">
+          {prefectureName}
+        </a>
+        <time
+          datetime={data.publishedTime}
+          class="text-gray-500 dark:text-gray-400"
+        >
+          {year}年{month}月{day}日
+        </time>
+      </div>
+      <h1 class="text-4xl font-bold mb-4">{data.title}</h1>
+      <p class="text-xl text-gray-600 dark:text-gray-300">
+        {data.description}
+      </p>
+    </header>
+
+    <!-- グラフ画像 -->
+    <DataChart
+      src={data.coverImage}
+      alt={data.title}
+      title="新規陽性者数の推移"
+    />
+
+    <!-- 前後の記事ナビゲーション -->
+    <nav class="mt-8 flex justify-between items-center gap-4">
+      {prevUrl ? (
+        <a href={prevUrl} class="btn btn-outline flex-1">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+          </svg>
+          前の日
+        </a>
+      ) : (
+        <div class="flex-1"></div>
+      )}
+      {nextUrl ? (
+        <a href={nextUrl} class="btn btn-outline flex-1 flex-row-reverse">
+          次の日
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+          </svg>
+        </a>
+      ) : (
+        <div class="flex-1"></div>
+      )}
+    </nav>
+
+    <!-- 記事フッター -->
+    <footer class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
+      <div class="flex flex-wrap gap-4 justify-between items-center">
+        <a href={prefectureUrl} class="btn btn-outline">
+          ← {prefectureName}の記事一覧
+        </a>
+        <div class="flex gap-2">
+          <a
+            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(data.title)}&url=${encodeURIComponent(Astro.site + Astro.url.pathname)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn btn-circle btn-sm"
+            aria-label="Twitterでシェア"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              class="w-5 h-5"
+            >
+              <path
+                d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+              ></path>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </footer>
+  </article>
+</BaseLayout>
