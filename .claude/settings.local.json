@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm install:*)",
+      "Bash(pnpm run dev)",
+      "Bash(pnpm add:*)",
+      "Bash(find:*)",
+      "WebFetch(domain:covid19.teraren.com)",
+      "mcp__playwright__browser_navigate",
+      "mcp__playwright__browser_close"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
