@@ -66,8 +66,8 @@ export function getRegionName(slug: string): string {
  * すべての都道府県を取得（スラッグと日本語名のペア）
  */
 export function getAllPrefectures(): Array<{ slug: string; name: string; region: string }> {
-  // kouchi は kochi と同じなので除外
-  const uniqueSlugs = Object.keys(PREFECTURE_MAP).filter(slug => slug !== 'kouchi');
+  // kochi は kouchi と同じなので除外（実際のデータは kouchi を使用）
+  const uniqueSlugs = Object.keys(PREFECTURE_MAP).filter(slug => slug !== 'kochi');
 
   return uniqueSlugs.map(slug => ({
     slug,
