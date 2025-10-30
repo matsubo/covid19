@@ -1,0 +1,189 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "@/layouts/base.astro";
+import ArticleCard from "@/components/covid19/ArticleCard.astro";
+
+export async function getStaticPaths() {
+  const allArticles = await getCollection("covid19");
+  
+  // 年別にグループ化
+  const yearGroups = new Map<string, typeof allArticles>();
+  const allYears = new Set<number>();
+  
+  allArticles.forEach((article) => {
+    const date = new Date(article.data.publishedTime);
+    const year = String(date.getFullYear());
+    allYears.add(date.getFullYear());
+    
+    if (!yearGroups.has(year)) {
+      yearGroups.set(year, []);
+    }
+    yearGroups.get(year)!.push(article);
+  });
+  
+  const sortedYears = Array.from(allYears).sort((a, b) => a - b);
+  
+  return Array.from(yearGroups.entries()).map(([year, articles]) => {
+    const yearNum = parseInt(year);
+    const yearIndex = sortedYears.indexOf(yearNum);
+    
+    return {
+      params: { year },
+      props: { 
+        articles: articles.sort((a, b) => 
+          new Date(b.data.publishedTime).getTime() - new Date(a.data.publishedTime).getTime()
+        ),
+        year,
+        prevYear: yearIndex > 0 ? sortedYears[yearIndex - 1] : null,
+        nextYear: yearIndex < sortedYears.length - 1 ? sortedYears[yearIndex + 1] : null,
+      },
+    };
+  });
+}
+
+const { articles, year, prevYear, nextYear } = Astro.props;
+const displayYear = `${year}年`;
+
+// 月別でグループ化
+const articlesByMonth = new Map<string, typeof articles>();
+articles.forEach((article) => {
+  const date = new Date(article.data.publishedTime);
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  
+  if (!articlesByMonth.has(month)) {
+    articlesByMonth.set(month, []);
+  }
+  articlesByMonth.get(month)!.push(article);
+});
+
+// 1月から12月まで順番に表示（記事がなくても表示）
+const allMonths = Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, "0"));
+
+const meta = {
+  title: `${displayYear}のグラフ一覧 - 新型コロナウイルス新規陽性者数`,
+  metaTitle: `${displayYear}のグラフ一覧`,
+  description: `${displayYear}に公開された新型コロナウイルス新規陽性者数のグラフ一覧（${articles.length}件）`,
+  type: "website" as const,
+  ogImage: articles[0]?.data.coverImage || "/images/2022/09/gruff20220926-1-r4c6mc.png",
+  ogImageAlt: `${displayYear}のグラフ一覧`,
+};
+---
+
+<BaseLayout entry={{ meta }}>
+  <div class="container mx-auto px-4 py-12">
+    <!-- ヘッダー -->
+    <div class="mb-12 text-center">
+      <nav class="text-sm breadcrumbs mb-4 justify-center">
+        <ul>
+          <li><a href="/" class="hover:text-primary">ホーム</a></li>
+          <li class="font-semibold">{year}年</li>
+        </ul>
+      </nav>
+      
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">
+        <span class="bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 bg-clip-text text-transparent">{displayYear}</span>のグラフ
+      </h1>
+      <p class="text-lg text-gray-600 dark:text-gray-400">
+        全 <span class="font-bold text-2xl text-primary">{articles.length}</span> 件のグラフ
+      </p>
+    </div>
+
+    <!-- 月別統計カード -->
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-12">
+      {allMonths.map((month) => {
+        const monthArticles = articlesByMonth.get(month) || [];
+        const displayMonth = `${parseInt(month)}月`;
+        const hasArticles = monthArticles.length > 0;
+        
+        return (
+          <a 
+            href={`/${year}/${month}`}
+            class={`card shadow-lg transition-all duration-300 border ${
+              hasArticles 
+                ? 'bg-white dark:bg-gray-800 border-gray-100 dark:border-gray-700 hover:shadow-xl hover:scale-105' 
+                : 'bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-800 opacity-60 hover:opacity-80'
+            }`}
+          >
+            <div class="card-body items-center text-center p-6">
+              <h3 class="text-xl font-bold mb-2">{displayMonth}</h3>
+              <div class={`text-3xl font-bold mb-1 ${hasArticles ? 'text-primary' : 'text-gray-400'}`}>
+                {monthArticles.length}
+              </div>
+              <p class="text-sm text-gray-500 dark:text-gray-400">件のグラフ</p>
+            </div>
+          </a>
+        );
+      })}
+    </div>
+
+    <!-- 月別セクション（記事がある月のみ） -->
+    {allMonths.filter(month => articlesByMonth.has(month)).map((month) => {
+      const monthArticles = articlesByMonth.get(month)!;
+      const displayMonth = `${year}年${parseInt(month)}月`;
+      
+      return (
+        <section class="mb-16">
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="text-3xl font-bold">
+              <a 
+                href={`/${year}/${month}`}
+                class="hover:text-primary transition-colors"
+              >
+                {displayMonth}
+              </a>
+            </h2>
+            <a 
+              href={`/${year}/${month}`}
+              class="btn btn-sm btn-outline"
+            >
+              この月のグラフを見る ({monthArticles.length}件)
+            </a>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {monthArticles.slice(0, 6).map((article) => (
+              <ArticleCard article={article} />
+            ))}
+          </div>
+          
+          {monthArticles.length > 6 && (
+            <div class="mt-6 text-center">
+              <a 
+                href={`/${year}/${month}`}
+                class="btn btn-primary"
+              >
+                さらに {monthArticles.length - 6} 件のグラフを見る
+              </a>
+            </div>
+          )}
+        </section>
+      );
+    })}
+
+    <!-- ナビゲーション -->
+    <div class="mt-12 flex flex-wrap justify-center gap-4">
+      {prevYear && (
+        <a 
+          href={`/${prevYear}`}
+          class="btn btn-outline"
+        >
+          ← {prevYear}年
+        </a>
+      )}
+      <a 
+        href="/"
+        class="btn btn-outline"
+      >
+        ホームへ戻る
+      </a>
+      {nextYear && (
+        <a 
+          href={`/${nextYear}`}
+          class="btn btn-outline"
+        >
+          {nextYear}年 →
+        </a>
+      )}
+    </div>
+  </div>
+</BaseLayout>

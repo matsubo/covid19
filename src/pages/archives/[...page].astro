@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "@/layouts/base.astro";
 import ArticleCard from "@/components/covid19/ArticleCard.astro";
+import Pagination from "@/components/shared/pagination.astro";
 import { covid19Handler } from "@/lib/handlers/covid19";
 import { SITE } from "@/lib/config";
 
@@ -33,35 +34,17 @@ const { articles, currentPage, totalPages, totalArticles } = Astro.props;
 
 // メタ情報
 const meta = {
-  title: "すべての記事 - 新型コロナウイルス新規陽性者数の遷移グラフ",
-  description: `新型コロナウイルス新規陽性者数の推移グラフ記事一覧（全${totalArticles}件）`,
+  title: "すべてのグラフ - 新型コロナウイルス新規陽性者数の遷移グラフ",
+  description: `新型コロナウイルス新規陽性者数の推移グラフ一覧（全${totalArticles}件）`,
   type: "website" as const,
 };
 
-// ページネーション用のURL生成
-function getPageUrl(page: number): string {
-  return `/archives/${page}`;
-}
-
-// 表示するページ番号を計算
-const visiblePages: (number | 'ellipsis')[] = [];
-const allPages = Array.from({ length: totalPages }, (_, i) => i + 1);
-
-for (const page of allPages) {
-  const shouldShow =
-    page === 1 ||
-    page === totalPages ||
-    Math.abs(page - currentPage) <= 2;
-
-  if (shouldShow) {
-    visiblePages.push(page);
-  } else if (
-    visiblePages[visiblePages.length - 1] !== 'ellipsis' &&
-    (page === currentPage - 3 || page === currentPage + 3)
-  ) {
-    visiblePages.push('ellipsis');
-  }
-}
+// ページネーション用の情報
+const baseUrl = "/archives";
+const currentUrl = `/archives/${currentPage}`;
+const prevUrl = currentPage > 1 ? `/archives/${currentPage - 1}` : undefined;
+const nextUrl = currentPage < totalPages ? `/archives/${currentPage + 1}` : undefined;
+const lastUrl = `/archives/${totalPages}`;
 ---
 
 <BaseLayout entry={{ meta }}>
@@ -71,15 +54,15 @@ for (const page of allPages) {
       <nav class="breadcrumbs text-sm mb-4 justify-center">
         <ul>
           <li><a href="/">ホーム</a></li>
-          <li>すべての記事</li>
+          <li>すべてのグラフ</li>
         </ul>
       </nav>
-      <h1 class="text-5xl font-bold mb-4">すべての記事</h1>
+      <h1 class="text-5xl font-bold mb-4">すべてのグラフ</h1>
       <p class="text-xl text-gray-600 dark:text-gray-300">
         新型コロナウイルス新規陽性者数の推移グラフ
       </p>
       <p class="text-lg mt-2">
-        全{totalArticles}件の記事 (ページ {currentPage} / {totalPages})
+        全{totalArticles}件のグラフ (ページ {currentPage} / {totalPages})
       </p>
     </header>
 
@@ -91,55 +74,14 @@ for (const page of allPages) {
     </div>
 
     <!-- ページネーション -->
-    {totalPages > 1 && (
-      <nav class="flex justify-center mt-12">
-        <div class="join">
-          {/* 前のページ */}
-          {currentPage > 1 ? (
-            <a
-              href={getPageUrl(currentPage - 1)}
-              class="join-item btn btn-outline"
-            >
-              «
-            </a>
-          ) : (
-            <button class="join-item btn btn-outline btn-disabled">«</button>
-          )}
-
-          {/* ページ番号 */}
-          {visiblePages.map((item, idx) => {
-            if (item === 'ellipsis') {
-              return (
-                <button key={`ellipsis-${idx}`} class="join-item btn btn-outline btn-disabled">
-                  ...
-                </button>
-              );
-            }
-
-            return (
-              <a
-                key={item}
-                href={getPageUrl(item)}
-                class={`join-item btn ${item === currentPage ? "btn-active" : "btn-outline"}`}
-              >
-                {item}
-              </a>
-            );
-          })}
-
-          {/* 次のページ */}
-          {currentPage < totalPages ? (
-            <a
-              href={getPageUrl(currentPage + 1)}
-              class="join-item btn btn-outline"
-            >
-              »
-            </a>
-          ) : (
-            <button class="join-item btn btn-outline btn-disabled">»</button>
-          )}
-        </div>
-      </nav>
-    )}
+    <Pagination
+      length={totalPages}
+      currentUrl={currentUrl}
+      currentPage={currentPage}
+      baseUrl={baseUrl}
+      prevUrl={prevUrl}
+      nextUrl={nextUrl}
+      lastUrl={lastUrl}
+    />
   </div>
 </BaseLayout>

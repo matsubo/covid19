@@ -36,21 +36,21 @@ const paginationList = Array.from(
 
 <section
   class:list={[
-    "flex items-center mx-auto mt-8",
+    "flex items-center justify-center mx-auto mt-12",
     !prevUrl && !nextUrl ? "hidden" : "",
   ]}
 >
   <nav class="join">
     {
       `${baseUrl}/1` == `${currentUrl}` ? (
-        <span class="join-item btn btn-sm btn-disabled" aria-label="First page">
+        <button class="join-item btn btn-sm btn-disabled" aria-label="最初のページ" disabled>
           <ArrowLeftDouble />
-        </span>
+        </button>
       ) : (
         <a
           href={`${baseUrl}/1`}
           class="join-item btn btn-sm"
-          aria-label="First page"
+          aria-label="最初のページ"
         >
           <ArrowLeftDouble />
         </a>
@@ -59,13 +59,13 @@ const paginationList = Array.from(
 
     {
       prevUrl ? (
-        <a href={prevUrl} class="join-item btn btn-sm">
-          <ArrowLeft01 /> <span class="hidden lg:block">Previous</span>
+        <a href={prevUrl} class="join-item btn btn-sm gap-2">
+          <ArrowLeft01 /> <span class="hidden md:inline">前へ</span>
         </a>
       ) : (
-        <span class="join-item btn btn-sm btn-disabled">
-          <ArrowLeft01 /> <span class="hidden lg:block">Previous</span>
-        </span>
+        <button class="join-item btn btn-sm btn-disabled gap-2" disabled>
+          <ArrowLeft01 /> <span class="hidden md:inline">前へ</span>
+        </button>
       )
     }
 
@@ -73,7 +73,12 @@ const paginationList = Array.from(
       paginationList.map((num) => (
         <a
           href={`${baseUrl}${num == 1 ? "" : "/" + num}`}
-          class={`join-item btn btn-sm ${currentPage == num ? "btn-active pointer-events-none" : ""}`}
+          class={`join-item btn btn-sm ${
+            currentPage == num 
+              ? "btn-active pointer-events-none" 
+              : ""
+          }`}
+          aria-current={currentPage == num ? "page" : undefined}
         >
           {num}
         </a>
@@ -82,23 +87,23 @@ const paginationList = Array.from(
 
     {
       !nextUrl ? (
-        <span class="join-item btn btn-sm btn-disabled">
-          <span class="hidden lg:block">Next</span> <ArrowRight01 />
-        </span>
+        <button class="join-item btn btn-sm btn-disabled gap-2" disabled>
+          <span class="hidden md:inline">次へ</span> <ArrowRight01 />
+        </button>
       ) : (
-        <a href={nextUrl} class="join-item btn btn-sm">
-          <span class="hidden lg:block">Next</span> <ArrowRight01 />
+        <a href={nextUrl} class="join-item btn btn-sm gap-2">
+          <span class="hidden md:inline">次へ</span> <ArrowRight01 />
         </a>
       )
     }
 
     {
       lastUrl == currentUrl ? (
-        <span class="join-item btn btn-sm btn-disabled" aria-label="Last page">
+        <button class="join-item btn btn-sm btn-disabled" aria-label="最後のページ" disabled>
           <ArrowRightDouble />
-        </span>
+        </button>
       ) : (
-        <a href={lastUrl} class="join-item btn btn-sm" aria-label="Last page">
+        <a href={lastUrl} class="join-item btn btn-sm" aria-label="最後のページ">
           <ArrowRightDouble />
         </a>
       )

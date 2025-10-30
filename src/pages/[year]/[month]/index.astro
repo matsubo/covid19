@@ -1,0 +1,211 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "@/layouts/base.astro";
+import ArticleCard from "@/components/covid19/ArticleCard.astro";
+
+export async function getStaticPaths() {
+  const allArticles = await getCollection("covid19");
+  
+  // 全ての年を取得
+  const allYears = new Set<number>();
+  const articlesByYearMonth = new Map<string, typeof allArticles>();
+  
+  allArticles.forEach((article) => {
+    const date = new Date(article.data.publishedTime);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const key = `${year}/${month}`;
+    
+    allYears.add(year);
+    
+    if (!articlesByYearMonth.has(key)) {
+      articlesByYearMonth.set(key, []);
+    }
+    articlesByYearMonth.get(key)!.push(article);
+  });
+  
+  // 全ての年×全ての月（1-12）でページを生成
+  const paths = [];
+  for (const year of Array.from(allYears).sort()) {
+    for (let monthNum = 1; monthNum <= 12; monthNum++) {
+      const month = String(monthNum).padStart(2, "0");
+      const key = `${year}/${month}`;
+      const articles = articlesByYearMonth.get(key) || [];
+      
+      paths.push({
+        params: { year: String(year), month },
+        props: { 
+          articles: articles.sort((a, b) => 
+            new Date(b.data.publishedTime).getTime() - new Date(a.data.publishedTime).getTime()
+          ),
+          year: String(year),
+          month
+        },
+      });
+    }
+  }
+  
+  return paths;
+}
+
+const { articles, year, month } = Astro.props;
+const displayMonth = `${year}年${parseInt(month)}月`;
+
+// 当月のカレンダー情報を生成
+const yearNum = parseInt(year);
+const monthNum = parseInt(month);
+const firstDay = new Date(yearNum, monthNum - 1, 1);
+const lastDay = new Date(yearNum, monthNum, 0);
+const daysInMonth = lastDay.getDate();
+const startDayOfWeek = firstDay.getDay();
+
+// 前月・次月の日付を計算
+const currentMonth = new Date(yearNum, monthNum - 1, 1);
+const prevMonth = new Date(currentMonth);
+prevMonth.setMonth(prevMonth.getMonth() - 1);
+const nextMonth = new Date(currentMonth);
+nextMonth.setMonth(nextMonth.getMonth() + 1);
+
+const prevMonthStr = `/${prevMonth.getFullYear()}/${String(prevMonth.getMonth() + 1).padStart(2, "0")}`;
+const nextMonthStr = `/${nextMonth.getFullYear()}/${String(nextMonth.getMonth() + 1).padStart(2, "0")}`;
+
+// 当月の記事件数を日付ごとに集計
+const articleCountByDay = new Map<number, number>();
+articles.forEach(article => {
+  const date = new Date(article.data.publishedTime);
+  if (date.getFullYear() === yearNum && date.getMonth() === monthNum - 1) {
+    const day = date.getDate();
+    articleCountByDay.set(day, (articleCountByDay.get(day) || 0) + 1);
+  }
+});
+
+// カレンダーのグリッドを生成（週の開始は日曜日）
+const calendarDays: Array<{ day: number | null, articleCount: number }> = [];
+
+// 月初の空白セルを追加
+for (let i = 0; i < startDayOfWeek; i++) {
+  calendarDays.push({ day: null, articleCount: 0 });
+}
+
+// 日付のセルを追加
+for (let i = 1; i <= daysInMonth; i++) {
+  calendarDays.push({
+    day: i,
+    articleCount: articleCountByDay.get(i) || 0
+  });
+}
+
+const meta = {
+  title: `${displayMonth}のグラフ一覧 - 新型コロナウイルス新規陽性者数`,
+  metaTitle: `${displayMonth}のグラフ一覧`,
+  description: `${displayMonth}に公開された新型コロナウイルス新規陽性者数のグラフ一覧（${articles.length}件）`,
+  type: "website" as const,
+  ogImage: articles[0]?.data.coverImage || "/images/2022/09/gruff20220926-1-r4c6mc.png",
+  ogImageAlt: `${displayMonth}のグラフ一覧`,
+};
+---
+
+<BaseLayout entry={{ meta }}>
+  <div class="container mx-auto px-4 py-12">
+    <!-- パンくずリスト -->
+    <nav class="text-sm breadcrumbs mb-8 justify-center">
+      <ul>
+        <li><a href="/" class="hover:text-primary">ホーム</a></li>
+        <li><a href={`/${year}`} class="hover:text-primary">{year}年</a></li>
+        <li class="font-semibold">{parseInt(month)}月</li>
+      </ul>
+    </nav>
+
+    <!-- ヘッダー -->
+    <div class="mb-12 text-center">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">
+        <span class="bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 bg-clip-text text-transparent">{displayMonth}</span>のグラフ
+      </h1>
+      <p class="text-lg text-gray-600 dark:text-gray-400">
+        全 <span class="font-bold text-2xl text-primary">{articles.length}</span> 件のグラフ
+      </p>
+    </div>
+
+    <!-- カレンダー -->
+    <div class="mb-12 max-w-4xl mx-auto">
+      <div class="card bg-base-100 border border-base-300 shadow-sm">
+        <div class="card-body p-6">
+          <h2 class="text-xl font-semibold text-center mb-4">
+            {year}年{parseInt(month)}月の日別グラフ数
+          </h2>
+          
+          <!-- 曜日ヘッダー -->
+          <div class="grid grid-cols-7 gap-2 mb-2">
+            {["日", "月", "火", "水", "木", "金", "土"].map((day) => (
+              <div class="text-center font-bold text-sm p-2">
+                {day}
+              </div>
+            ))}
+          </div>
+          
+          <!-- カレンダーグリッド -->
+          <div class="grid grid-cols-7 gap-2">
+            {calendarDays.map(({ day, articleCount }) => (
+              day === null ? (
+                <div class="aspect-square" />
+              ) : (
+                <a
+                  href={`/${year}/${month}/${String(day).padStart(2, "0")}`}
+                  class={`aspect-square flex flex-col items-center justify-center text-sm border rounded-lg transition-all ${
+                    articleCount > 0
+                      ? "border-gray-300 dark:border-gray-600 hover:border-primary hover:bg-base-200 hover:scale-105"
+                      : "border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-600 hover:border-gray-400"
+                  }`}
+                >
+                  <span class="font-medium">{day}</span>
+                  {articleCount > 0 ? (
+                    <span class="text-xs text-primary font-semibold mt-1">
+                      {articleCount}件
+                    </span>
+                  ) : (
+                    <span class="text-[10px] text-gray-400">
+                      0件
+                    </span>
+                  )}
+                </a>
+              )
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 前月・次月ナビゲーション -->
+    <div class="mb-12 flex justify-between items-center max-w-md mx-auto">
+      <a 
+        href={prevMonthStr}
+        class="btn btn-outline btn-sm gap-2"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        前月 ({prevMonth.getFullYear()}/{prevMonth.getMonth() + 1})
+      </a>
+      
+      <a 
+        href={nextMonthStr}
+        class="btn btn-outline btn-sm gap-2"
+      >
+        次月 ({nextMonth.getFullYear()}/{nextMonth.getMonth() + 1})
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </a>
+    </div>
+
+    <!-- ナビゲーション -->
+    <div class="mt-12 flex justify-center gap-4">
+      <a 
+        href={`/${year}`}
+        class="btn btn-outline"
+      >
+        ← {year}年のグラフ一覧へ
+      </a>
+    </div>
+  </div>
+</BaseLayout>

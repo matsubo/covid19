@@ -7,19 +7,19 @@ import { getAllPrefectures, getPrefectureName } from "@/lib/utils/prefecture";
 // 統計情報を取得
 const statistics = await covid19Handler.statistics();
 
-// 最新記事を取得
+// 最新グラフを取得
 const latestArticles = await covid19Handler.latestArticles(6);
 
-// 都道府県別の記事数を取得（全件）
+// 都道府県別のグラフ数を取得（全件）
 const allPrefectures = statistics.prefectureCount;
 
 const meta = {
-  title: "新型コロナウイルス新規陽性者数の遷移グラフ",
-  metaTitle: "新型コロナウイルス新規陽性者数の遷移グラフ",
+  title: "COVID-19新規陽性者数の遷移グラフ",
+  metaTitle: "COVID-19新規陽性者数の遷移グラフ",
   description: "各都道府県が提供しているオープンデータをグラフ化",
   type: "website" as const,
   ogImage: "/images/2022/09/gruff20220926-1-r4c6mc.png",
-  ogImageAlt: "新型コロナウイルス新規陽性者数の遷移グラフ",
+  ogImageAlt: "COVID-19新規陽性者数の遷移グラフ",
 };
 ---
 
@@ -27,7 +27,7 @@ const meta = {
   <!-- Hero セクション -->
   <div class="relative overflow-hidden bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
     <!-- 背景画像 -->
-    <div class="absolute inset-0 bg-cover bg-center opacity-10 dark:opacity-5" style="background-image: url('/images/2022/09/gruff20220926-1-r4c6mc.png');"></div>
+    <div class="absolute inset-0 bg-cover bg-center opacity-10 dark:opacity-5" style="background-image: url('/images/hero/gruff20220926-1-r4c6mc-cut.png');"></div>
     
     <!-- グリッドオーバーレイ -->
     <div class="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] dark:bg-grid-slate-700/25 dark:[mask-image:linear-gradient(0deg,rgba(255,255,255,0.1),rgba(255,255,255,0.5))]"></div>
@@ -36,7 +36,7 @@ const meta = {
       <div class="max-w-4xl mx-auto text-center">
         <!-- メインタイトル -->
         <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 animate-fade-in-up opacity-0">
-          <span class="gradient-text">新型コロナウイルス</span>
+          <span class="gradient-text">COVID-19</span>
           <br />
           <span class="text-gray-800 dark:text-white">新規陽性者数の遷移グラフ</span>
         </h1>
@@ -49,7 +49,7 @@ const meta = {
         <!-- 統計情報カード -->
         <div class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 mb-12 animate-fade-in-up opacity-0 stagger-2">
           <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
-            <div class="text-sm text-gray-500 dark:text-gray-400 mb-2">総記事数</div>
+            <div class="text-sm text-gray-500 dark:text-gray-400 mb-2">総グラフ数</div>
             <div class="text-3xl md:text-4xl font-bold text-indigo-600 dark:text-indigo-400">
               {statistics.totalArticles.toLocaleString()}
             </div>
@@ -117,7 +117,7 @@ const meta = {
                   {pref.count.toLocaleString()}
                 </div>
               </div>
-              <p class="text-sm text-gray-500 dark:text-gray-400">件の記事</p>
+              <p class="text-sm text-gray-500 dark:text-gray-400">件のグラフ</p>
               <div class="mt-4 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100"></div>
             </a>
           );
@@ -125,12 +125,12 @@ const meta = {
       </div>
     </section>
 
-    <!-- 最新記事セクション -->
+    <!-- 最新グラフセクション -->
     <section class="py-20 bg-gradient-to-b from-transparent to-gray-50 dark:to-gray-900/50">
       <div class="flex items-center justify-between mb-12">
         <div>
           <h2 class="text-4xl md:text-5xl font-bold mb-2">
-            <span class="gradient-text">最新</span>の記事
+            <span class="gradient-text">最新</span>のグラフ
           </h2>
           <p class="text-gray-600 dark:text-gray-400">直近の更新情報をチェック</p>
         </div>
@@ -138,7 +138,7 @@ const meta = {
           href="/archives/1" 
           class="btn btn-primary btn-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
         >
-          すべての記事を見る
+          すべてのグラフを見る
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
           </svg>
@@ -171,7 +171,7 @@ const meta = {
             href="/archives/1" 
             class="btn btn-lg bg-white text-indigo-600 hover:bg-gray-100 border-none shadow-lg transform hover:scale-105 transition-all duration-300"
           >
-            全記事を見る
+            全グラフを見る
           </a>
           <a 
             href="/history" 

@@ -83,6 +83,29 @@ const meta = {
 
 // 都道府県ページへのリンク
 const prefectureUrl = `/prefecture/${data.prefecture}`;
+
+// 同じ日付の他の都道府県の記事を取得
+const allArticles = await getCollection("covid19");
+const sameDayArticles = allArticles.filter(article => {
+  const articleDate = new Date(article.data.publishedTime);
+  const articleYear = articleDate.getFullYear();
+  const articleMonth = String(articleDate.getMonth() + 1).padStart(2, "0");
+  const articleDay = String(articleDate.getDate()).padStart(2, "0");
+  
+  return articleYear.toString() === year && 
+         articleMonth === month && 
+         articleDay === day &&
+         article.id !== id; // 現在の記事を除外
+}).map(article => ({
+  prefecture: article.data.prefecture,
+  prefectureName: getPrefectureName(article.data.prefecture),
+  title: article.data.title,
+  coverImage: article.data.coverImage,
+  url: getArticleUrl(article),
+}));
+
+// 日付ページへのリンク
+const dayListUrl = `/${year}/${month}/${day}`;
 ---
 
 <BaseLayout entry={{ meta }}>
@@ -122,6 +145,49 @@ const prefectureUrl = `/prefecture/${data.prefecture}`;
       title="新規陽性者数の推移"
     />
 
+    <!-- 同じ日の他の都道府県 -->
+    {sameDayArticles.length > 0 && (
+      <section class="mt-12 p-6 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-2xl font-bold">
+            同じ日の他の都道府県
+          </h2>
+          <a href={dayListUrl} class="btn btn-sm btn-outline">
+            すべて見る ({sameDayArticles.length + 1}件)
+          </a>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {sameDayArticles.slice(0, 8).map(article => (
+            <a 
+              href={article.url}
+              class="card bg-white dark:bg-gray-700 shadow hover:shadow-lg transition-all duration-300 hover:scale-105"
+            >
+              <div class="card-body p-4 text-center">
+                <h3 class="font-bold text-sm mb-2">{article.prefectureName}</h3>
+                <div class="w-full h-16 overflow-hidden rounded">
+                  <img 
+                    src={article.coverImage} 
+                    alt={article.prefectureName}
+                    class="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                </div>
+              </div>
+            </a>
+          ))}
+        </div>
+        
+        {sameDayArticles.length > 8 && (
+          <div class="mt-4 text-center">
+            <a href={dayListUrl} class="btn btn-primary btn-sm">
+              さらに {sameDayArticles.length - 8} 件の都道府県を見る
+            </a>
+          </div>
+        )}
+      </section>
+    )}
+
     <!-- 前後の記事ナビゲーション -->
     <nav class="mt-8 flex justify-between items-center gap-4">
       {prevUrl ? (
@@ -150,11 +216,11 @@ const prefectureUrl = `/prefecture/${data.prefecture}`;
     <footer class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
       <div class="flex flex-wrap gap-4 justify-between items-center">
         <a href={prefectureUrl} class="btn btn-outline">
-          ← {prefectureName}の記事一覧
+          ← {prefectureName}のグラフ一覧
         </a>
         <div class="flex gap-2">
           <a
-            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(data.title)}&url=${encodeURIComponent(Astro.site + Astro.url.pathname)}`}
+            href={`https://x.com/intent/tweet?text=${encodeURIComponent(data.title)}&url=${encodeURIComponent(Astro.site + Astro.url.pathname)}`}
             target="_blank"
             rel="noopener noreferrer"
             class="btn btn-circle btn-sm"

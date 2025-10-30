@@ -1,0 +1,251 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "@/layouts/base.astro";
+import ArticleCard from "@/components/covid19/ArticleCard.astro";
+
+export async function getStaticPaths() {
+  const allArticles = await getCollection("covid19");
+  
+  if (allArticles.length === 0) return [];
+  
+  // 全記事から年月日の範囲を取得
+  let minDate = new Date(allArticles[0].data.publishedTime);
+  let maxDate = new Date(allArticles[0].data.publishedTime);
+  
+  allArticles.forEach((article) => {
+    const date = new Date(article.data.publishedTime);
+    if (date < minDate) minDate = date;
+    if (date > maxDate) maxDate = date;
+  });
+  
+  // 記事がある日付をマップに格納
+  const dateGroups = new Map<string, typeof allArticles>();
+  
+  allArticles.forEach((article) => {
+    const date = new Date(article.data.publishedTime);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const key = `${year}/${month}/${day}`;
+    
+    if (!dateGroups.has(key)) {
+      dateGroups.set(key, []);
+    }
+    dateGroups.get(key)!.push(article);
+  });
+  
+  // 最小日から最大日まで全ての日付のページを生成
+  const paths = [];
+  const currentDate = new Date(minDate);
+  
+  while (currentDate <= maxDate) {
+    const year = String(currentDate.getFullYear());
+    const month = String(currentDate.getMonth() + 1).padStart(2, "0");
+    const day = String(currentDate.getDate()).padStart(2, "0");
+    const key = `${year}/${month}/${day}`;
+    
+    const articles = dateGroups.get(key) || [];
+    
+    paths.push({
+      params: { year, month, day },
+      props: { 
+        articles: articles.sort((a, b) => 
+          new Date(b.data.publishedTime).getTime() - new Date(a.data.publishedTime).getTime()
+        ),
+        year,
+        month,
+        day,
+        allArticles
+      },
+    });
+    
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+  
+  return paths;
+}
+
+const { articles, year, month, day, allArticles } = Astro.props;
+const displayDate = `${year}年${parseInt(month)}月${parseInt(day)}日`;
+
+// 前日・翌日の日付を計算
+const currentDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+const prevDate = new Date(currentDate);
+prevDate.setDate(prevDate.getDate() - 1);
+const nextDate = new Date(currentDate);
+nextDate.setDate(nextDate.getDate() + 1);
+
+const prevDateStr = `/${prevDate.getFullYear()}/${String(prevDate.getMonth() + 1).padStart(2, "0")}/${String(prevDate.getDate()).padStart(2, "0")}`;
+const nextDateStr = `/${nextDate.getFullYear()}/${String(nextDate.getMonth() + 1).padStart(2, "0")}/${String(nextDate.getDate()).padStart(2, "0")}`;
+
+// 当月のカレンダー情報を生成
+const yearNum = parseInt(year);
+const monthNum = parseInt(month);
+const firstDay = new Date(yearNum, monthNum - 1, 1);
+const lastDay = new Date(yearNum, monthNum, 0);
+const daysInMonth = lastDay.getDate();
+const startDayOfWeek = firstDay.getDay();
+
+// 当月の記事件数を日付ごとに集計
+const articleCountByDay = new Map<number, number>();
+allArticles.forEach(article => {
+  const date = new Date(article.data.publishedTime);
+  if (date.getFullYear() === yearNum && date.getMonth() === monthNum - 1) {
+    const day = date.getDate();
+    articleCountByDay.set(day, (articleCountByDay.get(day) || 0) + 1);
+  }
+});
+
+// カレンダーのグリッドを生成（週の開始は日曜日）
+const calendarDays: Array<{ day: number | null, articleCount: number, isCurrentDay: boolean }> = [];
+
+// 月初の空白セルを追加
+for (let i = 0; i < startDayOfWeek; i++) {
+  calendarDays.push({ day: null, articleCount: 0, isCurrentDay: false });
+}
+
+// 日付のセルを追加
+for (let i = 1; i <= daysInMonth; i++) {
+  calendarDays.push({
+    day: i,
+    articleCount: articleCountByDay.get(i) || 0,
+    isCurrentDay: i === parseInt(day)
+  });
+}
+
+const meta = {
+  title: `${displayDate}のグラフ一覧 - 新型コロナウイルス新規陽性者数`,
+  metaTitle: `${displayDate}のグラフ一覧`,
+  description: `${displayDate}に公開された新型コロナウイルス新規陽性者数のグラフ一覧（${articles.length}件）`,
+  type: "website" as const,
+  ogImage: articles[0]?.data.coverImage || "/images/2022/09/gruff20220926-1-r4c6mc.png",
+  ogImageAlt: `${displayDate}のグラフ一覧`,
+};
+---
+
+<BaseLayout entry={{ meta }}>
+  <div class="container mx-auto px-4 py-12">
+    <!-- パンくずリスト -->
+    <nav class="text-sm breadcrumbs mb-8 justify-center">
+      <ul>
+        <li><a href="/" class="hover:text-primary">ホーム</a></li>
+        <li><a href={`/${year}`} class="hover:text-primary">{year}年</a></li>
+        <li><a href={`/${year}/${month}`} class="hover:text-primary">{parseInt(month)}月</a></li>
+        <li class="font-semibold">{parseInt(day)}日</li>
+      </ul>
+    </nav>
+
+    <!-- ヘッダー -->
+    <div class="mb-12 text-center">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">
+        <span class="bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 bg-clip-text text-transparent">{displayDate}</span>のグラフ
+      </h1>
+      <p class="text-lg text-gray-600 dark:text-gray-400">
+        全 <span class="font-bold text-2xl text-primary">{articles.length}</span> 件のグラフ
+      </p>
+    </div>
+
+    <!-- 前日・翌日ナビゲーション -->
+    <div class="mb-12 flex justify-between items-center max-w-md mx-auto">
+      <a 
+        href={prevDateStr}
+        class="btn btn-outline btn-sm gap-2"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        前日 ({prevDate.getMonth() + 1}/{prevDate.getDate()})
+      </a>
+      
+      <a 
+        href={nextDateStr}
+        class="btn btn-outline btn-sm gap-2"
+      >
+        翌日 ({nextDate.getMonth() + 1}/{nextDate.getDate()})
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </a>
+    </div>
+
+    <!-- 記事一覧 -->
+    {articles.length > 0 ? (
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {articles.map((article) => (
+          <ArticleCard article={article} />
+        ))}
+      </div>
+    ) : (
+      <div class="text-center py-12">
+        <p class="text-xl text-gray-600 dark:text-gray-400">
+          この日のグラフはありません
+        </p>
+      </div>
+    )}
+
+    <!-- カレンダー -->
+    <div class="mt-12 mb-12 max-w-md mx-auto">
+      <div class="card bg-base-100 border border-base-300 shadow-sm">
+        <div class="card-body p-4">
+          <h2 class="text-lg font-semibold text-center mb-3">
+            {year}年{parseInt(month)}月
+          </h2>
+          
+          <!-- 曜日ヘッダー -->
+          <div class="grid grid-cols-7 gap-1 mb-1">
+            {["日", "月", "火", "水", "木", "金", "土"].map((day) => (
+              <div class="text-center text-xs font-medium text-gray-500 p-1">
+                {day}
+              </div>
+            ))}
+          </div>
+          
+          <!-- カレンダーグリッド -->
+          <div class="grid grid-cols-7 gap-1">
+            {calendarDays.map(({ day, articleCount, isCurrentDay }) => (
+              day === null ? (
+                <div class="aspect-square" />
+              ) : (
+                <a
+                  href={`/${year}/${month}/${String(day).padStart(2, "0")}`}
+                  class={`aspect-square flex flex-col items-center justify-center text-xs border transition-colors ${
+                    isCurrentDay
+                      ? "border-2 border-gray-900 dark:border-gray-100 font-bold"
+                      : "border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500"
+                  } ${
+                    articleCount > 0
+                      ? "hover:bg-base-200"
+                      : "text-gray-400 dark:text-gray-600"
+                  }`}
+                >
+                  <span>{day}</span>
+                  {articleCount > 0 && (
+                    <span class="text-[10px] text-gray-600 dark:text-gray-400">
+                      {articleCount}件
+                    </span>
+                  )}
+                </a>
+              )
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ナビゲーション -->
+    <div class="mt-12 flex justify-center gap-4">
+      <a 
+        href={`/${year}/${month}`}
+        class="btn btn-outline"
+      >
+        ← {parseInt(month)}月のグラフ一覧へ
+      </a>
+      <a 
+        href={`/${year}`}
+        class="btn btn-outline"
+      >
+        {year}年のグラフ一覧へ
+      </a>
+    </div>
+  </div>
+</BaseLayout>

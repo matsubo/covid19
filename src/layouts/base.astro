@@ -71,6 +71,42 @@ const meta = entry.meta;
       scrollToTopBtn?.addEventListener('click', () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       });
+
+      // 共有ボタンの制御
+      document.addEventListener('click', (e) => {
+        const target = e.target as HTMLElement;
+        const shareButton = target.closest('.share-button') as HTMLButtonElement;
+        
+        if (shareButton) {
+          e.preventDefault();
+          const url = shareButton.dataset.url || '';
+          const title = shareButton.dataset.title || '';
+          const text = shareButton.dataset.text || '';
+
+          // Web Share APIが利用可能な場合
+          if (navigator.share) {
+            navigator.share({
+              title: title,
+              text: text,
+              url: url,
+            }).catch((error) => {
+              console.log('Share failed:', error);
+            });
+          } else {
+            // フォールバック: クリップボードにコピー
+            navigator.clipboard.writeText(url).then(() => {
+              // 成功時の表示
+              const originalHTML = shareButton.innerHTML;
+              shareButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>';
+              setTimeout(() => {
+                shareButton.innerHTML = originalHTML;
+              }, 2000);
+            }).catch((error) => {
+              console.error('Copy failed:', error);
+            });
+          }
+        }
+      });
     </script>
 
     <style>
