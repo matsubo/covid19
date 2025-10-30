@@ -40,7 +40,7 @@ export const GET: APIRoute = async () => {
   ${statistics.prefectureCount
     .map(
       (pref) => `  <url>
-    <loc>${baseUrl}/prefecture/${pref.prefecture}</loc>
+    <loc>${baseUrl}/prefecture/${pref.prefecture}/</loc>
     <lastmod>${new Date().toISOString()}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
@@ -56,7 +56,7 @@ export const GET: APIRoute = async () => {
       const month = String(date.getMonth() + 1).padStart(2, "0");
       const day = String(date.getDate()).padStart(2, "0");
       const slug = article.id.split("/").pop();
-      const url = `${baseUrl}/${year}/${month}/${day}/${slug}`;
+      const url = `${baseUrl}/${year}/${month}/${day}/${slug}/`;
 
       return `  <url>
     <loc>${url}</loc>
