@@ -14,6 +14,10 @@ const integrations = [mdx(), sitemap(), pagefind()];
 export default defineConfig({
   site: SITE.url,
   base: SITE.basePath,
+  prefetch: {
+    prefetchAll: true,
+    defaultStrategy: "viewport",
+  },
   markdown: {
     remarkPlugins: [readingTime, modifiedTime],
   },
