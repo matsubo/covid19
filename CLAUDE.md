@@ -6,7 +6,6 @@ This document explains how articles are managed in the Astro News repository.
 
 - [Content Structure](#content-structure)
 - [Content Layer Configuration](#content-layer-configuration)
-- [Keystatic CMS](#keystatic-cms)
 - [Article Schema](#article-schema)
 - [Querying Articles](#querying-articles)
 - [Categories System](#categories-system)
@@ -95,62 +94,6 @@ export const collections = {
 - **Authors**: MDX format with profile information and social links
 - **Categories**: JSON format with slug validation
 - **Views**: Metadata for list/archive pages
-
----
-
-## Keystatic CMS
-
-Keystatic provides a user-friendly interface for content editing.
-
-### Configuration
-
-**File:** `keystatic.config.ts`
-
-```typescript
-import { articlesKs, authorsKs, categoriesKs } from "@/lib/keystatic";
-import { config } from "@keystatic/core";
-
-export default config({
-  storage: {
-    kind: "local",  // Files stored in git repository
-  },
-  ui: {
-    brand: {
-      name: "Astro News",
-    },
-    navigation: ["---", "articles", "---", "authors", "categories"],
-  },
-  collections: {
-    articles: articlesKs,
-    authors: authorsKs,
-    categories: categoriesKs,
-  },
-});
-```
-
-### Enabling Keystatic CMS
-
-1. Create a `.env` file from `.env.example`
-2. Set `RUN_KEYSTATIC=true`
-3. Run `pnpm run dev`
-4. Access CMS at `http://localhost:4321/keystatic`
-
-### Articles Collection (Keystatic)
-
-**File:** `src/lib/keystatic/articlesKs.ts`
-
-Fields available in the CMS:
-
-- **isDraft** (checkbox): Mark article as draft (hidden from public)
-- **isMainHeadline** (checkbox): Feature as main headline on homepage
-- **isSubHeadline** (checkbox): Feature as sub headline on homepage
-- **title** (slug): Article title (max 60 characters)
-- **description** (text): Meta description (max 160 characters)
-- **cover** (image): Featured image (stored in `src/assets/images/articles/`)
-- **category** (relationship): Link to category collection
-- **publishedTime** (datetime): Publication date and time
-- **authors** (array of relationships): One or more authors (minimum 1 required)
-- **content** (mdx): Article body with rich text and images
 
 ---
 
@@ -658,19 +601,7 @@ import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
 import { modifiedTime, readingTime } from "./src/lib/utils/remarks.mjs";
 import { SITE } from "./src/lib/config";
-import keystatic from "@keystatic/astro";
-import react from "@astrojs/react";
-import { loadEnv } from "vite";
 import pagefind from "astro-pagefind";
-
-const { RUN_KEYSTATIC } = loadEnv(import.meta.env.MODE, process.cwd(), "");
-
-const integrations = [mdx(), sitemap(), pagefind()];
-
-if (RUN_KEYSTATIC === "true") {
-  integrations.push(react());
-  integrations.push(keystatic());
-}
 
 export default defineConfig({
   site: SITE.url,
@@ -682,7 +613,7 @@ export default defineConfig({
     responsiveStyles: true,
     breakpoints: [640, 1024],
   },
-  integrations,
+  integrations: [mdx(), sitemap(), pagefind()],
   vite: {
     plugins: [tailwindcss()],
   },
@@ -696,7 +627,6 @@ export default defineConfig({
 | Feature | Implementation | Location |
 |---------|----------------|----------|
 | Content Storage | MDX files in git | `src/content/articles/` |
-| CMS | Keystatic (local) | `http://localhost:4321/keystatic` |
 | Schema Validation | Zod with references | `src/lib/schema/` |
 | Reading Time | Remark plugin (180 WPM) | `src/lib/utils/remarks.mjs` |
 | Last Modified | Git log + filesystem | `src/lib/utils/remarks.mjs` |
@@ -715,26 +645,6 @@ export default defineConfig({
 ---
 
 ## Workflow for Adding New Articles
-
-### Using Keystatic CMS (Recommended)
-
-1. Start dev server: `pnpm run dev`
-2. Navigate to `http://localhost:4321/keystatic`
-3. Click "Articles" → "Create Article"
-4. Fill in all required fields:
-   - Title (max 60 characters)
-   - Description (max 160 characters)
-   - Upload cover image
-   - Select category
-   - Add at least one author
-   - Set publication date
-   - Write content in MDX editor
-5. Optionally mark as:
-   - Draft (hidden from public)
-   - Main headline (featured on homepage)
-   - Sub headline (secondary feature)
-6. Click "Create"
-7. Commit changes to git
 
 ### Manual Method
 
@@ -774,14 +684,6 @@ Check:
 - Category reference is valid
 - At least one author is specified
 
-### Keystatic Not Loading
-
-Check:
-- `.env` file exists
-- `RUN_KEYSTATIC=true` is set
-- Dependencies installed: `pnpm install`
-- Port 4321 is available
-
 ### Images Not Loading
 
 Check:
@@ -792,4 +694,4 @@ Check:
 
 ---
 
-For more information, see the [Astro Documentation](https://astro.build) and [Keystatic Documentation](https://keystatic.com).
+For more information, see the [Astro Documentation](https://astro.build).

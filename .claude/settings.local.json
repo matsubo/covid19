@@ -12,7 +12,8 @@
       "Bash(pnpm run build)",
       "Read(//private/tmp/**)",
       "Bash(pkill:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(test:*)"
     ],
     "deny": [],
     "ask": []

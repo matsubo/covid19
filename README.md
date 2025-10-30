@@ -35,26 +35,11 @@ pnpm install
 pnpm run dev
 ```
 
-### Running Keystatic CMS
-
-1. Rename `.env.example` to `.env`.
-
-2. Set `RUN_KEYSTATIC=true`.
-
-3. Start the development server:
-
- ```bash
-    pnpm run dev
-  ```
-
-4. Open `http://localhost:4321/keystatic` in your browser.
-
 ## ✨ Features
 
 ### Implemented Features
 
 - Content Layer
-- Keystatic CMS
 - Navigation
 - Responsive Design
 - Pagination
@@ -73,7 +58,6 @@ pnpm run dev
 This project leverages cutting-edge web technologies:
 
 - [Astro V5.7](https://astro.build) - Modern static site builder
-- [KeyStatic](https://keystatic.com) - Headless content-management system
 - [Tailwind CSS](https://tailwindcss.com) - Utility-first CSS framework
 - [DaisyUI](https://daisyui.com/) - Tailwind CSS component library
 - [TypeScript](https://typescriptlang.org) - Typed JavaScript
