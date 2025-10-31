@@ -6,9 +6,6 @@ import sitemap from "@astrojs/sitemap";
 import { modifiedTime, readingTime } from "./src/lib/utils/remarks.mjs";
 import { SITE } from "./src/lib/config";
 import { loadEnv } from "vite";
-import pagefind from "astro-pagefind";
-
-const integrations = [mdx(), sitemap(), pagefind()];
 
 // https://astro.build/config
 export default defineConfig({
@@ -25,7 +22,7 @@ export default defineConfig({
     responsiveStyles: true,
     breakpoints: [640, 1024],
   },
-  integrations: [mdx(), sitemap(), pagefind()],
+  integrations: [mdx(), sitemap()],
   vite: {
     plugins: [tailwindcss()],
   },

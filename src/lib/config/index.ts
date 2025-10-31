@@ -115,12 +115,10 @@ export const OTHER_LINKS: Link[] = [
 export const SOCIAL_LINKS: Link[] = [
   {
     href: "https://matsubo.github.io/",
-    text: "Personal Website",
-    icon: "earth",
+    text: "Author"
   },
   {
     href: "https://x.com/matsubokkuri",
-    text: "Twitter",
-    icon: "newTwitter",
+    text: "@matsubokkuri"
   },
 ];

@@ -85,19 +85,20 @@ function getPrefectureId(href: string): string {
           </svg>
           フォロー
         </h3>
-        <div class="flex flex-wrap gap-3">
-          {SOCIAL_LINKS.map(({ href, icon, text, target }) => (
+        <nav class="flex flex-col gap-3">
+          {SOCIAL_LINKS.map(({ href, text, target }) => (
             <a
-              href={href}
-              class="btn btn-circle btn-sm bg-gray-100 dark:bg-gray-800 hover:bg-gradient-to-br hover:from-indigo-600 hover:to-purple-600 dark:hover:from-indigo-500 dark:hover:to-purple-500 border-none hover:text-white transition-all duration-300 hover:scale-110 shadow-md hover:shadow-lg"
-              target={target ?? "_blank"}
-              title={text}
-              aria-label={text}
+              href={href} 
+              class="text-sm text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors duration-300 flex items-center gap-2 group" 
+              target={target ?? "_self"}
             >
-              <Icon icon={icon} />
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+              {text}
             </a>
           ))}
-        </div>
+        </nav>
       </div>
 
       <!-- 追加情報とテーマ切り替え -->

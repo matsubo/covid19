@@ -525,15 +525,21 @@ export default defineConfig({
 
 Uses **Pagefind** for static site search:
 
-```javascript
-integrations: [
-  pagefind(),  // Automatic search index generation
-]
-```
-
-- **Index generation**: Build-time
+- **Index generation**: Manual (via `pnpm run build:search`)
 - **Client-side search**: Fast, no server required
 - **UI**: Provided by `@pagefind/default-ui`
+- **Index storage**: Committed to repository in `dist/pagefind/`
+
+To regenerate the search index:
+
+```bash
+pnpm run build:search
+```
+
+This will:
+1. Build the Astro site (`astro build`)
+2. Generate the pagefind index (`pagefind --site dist`)
+3. The index in `dist/pagefind/` should be committed to the repository
 
 ### 8. RSS Feed
 

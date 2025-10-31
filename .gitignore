@@ -1,5 +1,7 @@
 # build output
 dist/
+# keep pagefind index in repository
+!dist/pagefind/
 
 # generated types
 .astro/
