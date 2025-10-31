@@ -2,6 +2,18 @@
 import { NAVIGATION_LINKS, SOCIAL_LINKS, OTHER_LINKS } from "@/lib/config";
 import Icon from "../bases/icon.astro";
 import ThemeController from "../bases/theme-controller.astro";
+import { covid19Handler } from "@/lib/handlers/covid19";
+
+// 都道府県ごとの記事件数を取得
+const stats = await covid19Handler.statistics();
+const countByPrefecture = new Map(
+  stats.prefectureCount.map(({ prefecture, count }) => [prefecture, count])
+);
+
+// NAVIGATION_LINKSの都道府県名から都道府県識別子を取得するヘルパー
+function getPrefectureId(href: string): string {
+  return href.split('/').pop() || '';
+}
 ---
 
 <footer class="relative border-t border-gray-200 dark:border-gray-800 bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-950 py-12">
@@ -40,19 +52,28 @@ import ThemeController from "../bases/theme-controller.astro";
           都道府県一覧
         </h3>
         <nav class="flex flex-col gap-3">
+          {NAVIGATION_LINKS.map(({ href, text, target }) => {
+            const prefectureId = getPrefectureId(href);
+            const count = countByPrefecture.get(prefectureId) || 0;
 
-          {NAVIGATION_LINKS.map(({ href, text, target }) => (
-            <a 
-              href={href} 
-              class="text-sm text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-300 flex items-center gap-2 group" 
-              target={target ?? "_self"}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-              </svg>
-              {text}
-            </a>
-          ))}
+            return (
+              <a
+                href={href}
+                class="text-sm text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-300 flex items-center justify-between gap-2 group"
+                target={target ?? "_self"}
+              >
+                <span class="flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                  </svg>
+                  {text}
+                </span>
+                <span class="text-xs px-2 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 font-medium">
+                  {count}
+                </span>
+              </a>
+            );
+          })}
         </nav>
       </div>
 
