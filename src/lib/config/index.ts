@@ -103,6 +103,10 @@ export const OTHER_LINKS: Link[] = [
     text: "更新停止理由と履歴",
   },
   {
+    href: "https://github.com/matsubo/covid19",
+    text: "このサイトのソースコード",
+  },
+  {
     href: "https://github.com/matsubo/covid19-daily-tweet",
     text: "連携プログラムソースコード",
   },
