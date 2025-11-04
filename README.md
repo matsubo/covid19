@@ -4,7 +4,12 @@
 
 ## 🌐 デモ
 
-ライブサイト: [COVID-19 Data Visualization](https://your-site-url.com)
+ライブサイト: [COVID-19 Data Visualization](https://covid19.teraren.com/)
+
+<img width="1248" height="615" alt="image" src="https://github.com/user-attachments/assets/a258f634-c609-4d93-b10a-9c373289eba0" />
+
+<img width="1131" height="742" alt="image" src="https://github.com/user-attachments/assets/462f54a0-b48f-4121-a97a-3f15bb9c10da" />
+
 
 ## 🚀 セットアップ
 
