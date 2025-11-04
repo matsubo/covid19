@@ -121,7 +121,12 @@ The content layer uses Astro's glob loaders to manage four collections:
 ```typescript
 import { glob } from "astro/loaders";
 import { defineCollection } from "astro:content";
-import { articleSchema, authorSchema, categorySchema, viewSchema } from "@/lib/schema";
+import {
+  articleSchema,
+  authorSchema,
+  categorySchema,
+  viewSchema,
+} from "@/lib/schema";
 
 const articleCollection = defineCollection({
   loader: glob({ pattern: "**/*.mdx", base: "./src/content/articles" }),
@@ -193,13 +198,12 @@ isMainHeadline: false
 isSubHeadline: true
 description: Learn practical strategies to manage your time and increase productivity.
 title: Mastering Time Management
-cover: '@assets/images/articles/mastering-time-management/cover.avif'
+cover: "@assets/images/articles/mastering-time-management/cover.avif"
 category: productivity
 publishedTime: 2024-11-16T00:00:00.000Z
 authors:
   - liam-leonard
 ---
-
 Article content goes here in MDX format...
 ```
 
@@ -275,8 +279,7 @@ export const articlesHandler = {
     const subHeadlines = articlesCollection
       .filter(
         (article) =>
-          article.data.isSubHeadline === true &&
-          mainHeadline.id !== article.id
+          article.data.isSubHeadline === true && mainHeadline.id !== article.id
       )
       .slice(0, 4);
 
@@ -378,17 +381,20 @@ Each category is defined in a JSON file:
 import { getCollection } from "astro:content";
 import { articlesHandler } from "./articles";
 
-const categoriesCollection = await getCollection('categories');
+const categoriesCollection = await getCollection("categories");
 
 export const categoriesHandler = {
   // Get all categories sorted alphabetically
-  allCategories: () => categoriesCollection.sort((a, b) =>
-    a.data.title.localeCompare(b.data.title)
-  ),
+  allCategories: () =>
+    categoriesCollection.sort((a, b) =>
+      a.data.title.localeCompare(b.data.title)
+    ),
 
   // Get single category by ID
   oneCategory: (categoryId: string) => {
-    const category = categoriesCollection.find((category) => category.id === categoryId);
+    const category = categoriesCollection.find(
+      (category) => category.id === categoryId
+    );
     if (!category) {
       throw new Error(`Category with id ${categoryId} not found`);
     }
@@ -398,19 +404,20 @@ export const categoriesHandler = {
   // Get categories with article counts and latest articles
   allCategoriesWithLatestArticles: () => {
     return categoriesCollection.map((category) => {
-      const articles = articlesHandler.allArticles()
+      const articles = articlesHandler
+        .allArticles()
         .filter((article) => article.data.category.id === category.id);
       return {
         ...category,
         data: {
           ...category.data,
           count: articles.length,
-          latestArticles: articles.slice(0, 3)
-        }
-      }
-    })
-  }
-}
+          latestArticles: articles.slice(0, 3),
+        },
+      };
+    });
+  },
+};
 ```
 
 ### Category Pages with Pagination
@@ -463,7 +470,9 @@ export function modifiedTime() {
       try {
         const gitResult = execSync(
           `git log -1 --pretty="format:%cI" "${filepath}"`
-        ).toString().trim();
+        )
+          .toString()
+          .trim();
         if (gitResult) {
           lastModified = gitResult;
         }
@@ -509,6 +518,7 @@ export const formatDate = (
 ```
 
 **Examples**:
+
 - **Relative**: "2 days ago", "3 hours ago"
 - **Long**: "Monday, January 15, 2024 3:30 PM EST"
 - **Short**: "January 15, 2024 EST"
@@ -518,6 +528,7 @@ export const formatDate = (
 **File:** `src/components/shared/pagination.astro`
 
 Features:
+
 - Configurable items per page (default: 4)
 - Maximum 4 visible page buttons
 - First/last page navigation
@@ -559,6 +570,7 @@ export const getMeta = async (
 ```
 
 Includes:
+
 - Page title and meta title
 - Description for SEO
 - Open Graph image and alt text
@@ -588,7 +600,7 @@ export default defineConfig({
 
 Uses **Pagefind** for static site search:
 
-- **Index generation**: Manual (via `pnpm run build:search`)
+- **Index generation**: Manual (via `bun run build:search`)
 - **Client-side search**: Fast, no server required
 - **UI**: Provided by `@pagefind/default-ui`
 - **Index storage**: Committed to repository in `dist/pagefind/`
@@ -596,10 +608,11 @@ Uses **Pagefind** for static site search:
 To regenerate the search index:
 
 ```bash
-pnpm run build:search
+bun run build:search
 ```
 
 This will:
+
 1. Build the Astro site (`astro build`)
 2. Generate the pagefind index (`pagefind --site dist`)
 3. The index in `dist/pagefind/` should be committed to the repository
@@ -609,6 +622,7 @@ This will:
 **File**: `src/pages/rss.xml.ts`
 
 Generates RSS feed for all published articles:
+
 - Automatically includes all published articles
 - Sorted by publication date
 - Includes full content or excerpts
@@ -618,9 +632,7 @@ Generates RSS feed for all published articles:
 Automatically generated via `@astrojs/sitemap`:
 
 ```javascript
-integrations: [
-  sitemap(),
-]
+integrations: [sitemap()];
 ```
 
 - **URL**: `/sitemap-index.xml`
@@ -646,7 +658,7 @@ export const SITE = {
   dir: "ltr",
   charset: "UTF-8",
   basePath: "/",
-  postsPerPage: 4,  // Number of articles per page
+  postsPerPage: 4, // Number of articles per page
 };
 
 export const NAVIGATION_LINKS: Link[] = [
@@ -676,7 +688,7 @@ export default defineConfig({
   site: SITE.url,
   base: SITE.basePath,
   markdown: {
-    remarkPlugins: [readingTime, modifiedTime],  // Custom remark plugins
+    remarkPlugins: [readingTime, modifiedTime], // Custom remark plugins
   },
   image: {
     responsiveStyles: true,
@@ -693,23 +705,23 @@ export default defineConfig({
 
 ## Summary of Key Features
 
-| Feature | Implementation | Location |
-|---------|----------------|----------|
-| Content Storage | MDX files in git | `src/content/articles/` |
-| Schema Validation | Zod with references | `src/lib/schema/` |
-| Reading Time | Remark plugin (180 WPM) | `src/lib/utils/remarks.mjs` |
-| Last Modified | Git log + filesystem | `src/lib/utils/remarks.mjs` |
-| Pagination | Smart pagination (4/page) | `src/components/shared/pagination.astro` |
-| Categories | 7 predefined categories | `src/content/categories/` |
-| Authors | Multi-author support | `src/content/authors/` |
-| Featured Articles | Main/sub headline flags | Article frontmatter |
-| Draft Support | Draft filtering | `isDraft` field |
-| Date Formatting | Long/short + relative | `src/lib/utils/date.ts` |
-| Image Optimization | AVIF/WebP responsive | Astro config |
-| Search | Pagefind | Build-time indexing |
-| SEO | Meta + Open Graph | `src/lib/utils/getMeta.ts` |
-| RSS Feed | Auto-generated | `src/pages/rss.xml.ts` |
-| Sitemap | Auto-generated | `@astrojs/sitemap` |
+| Feature            | Implementation            | Location                                 |
+| ------------------ | ------------------------- | ---------------------------------------- |
+| Content Storage    | MDX files in git          | `src/content/articles/`                  |
+| Schema Validation  | Zod with references       | `src/lib/schema/`                        |
+| Reading Time       | Remark plugin (180 WPM)   | `src/lib/utils/remarks.mjs`              |
+| Last Modified      | Git log + filesystem      | `src/lib/utils/remarks.mjs`              |
+| Pagination         | Smart pagination (4/page) | `src/components/shared/pagination.astro` |
+| Categories         | 7 predefined categories   | `src/content/categories/`                |
+| Authors            | Multi-author support      | `src/content/authors/`                   |
+| Featured Articles  | Main/sub headline flags   | Article frontmatter                      |
+| Draft Support      | Draft filtering           | `isDraft` field                          |
+| Date Formatting    | Long/short + relative     | `src/lib/utils/date.ts`                  |
+| Image Optimization | AVIF/WebP responsive      | Astro config                             |
+| Search             | Pagefind                  | Build-time indexing                      |
+| SEO                | Meta + Open Graph         | `src/lib/utils/getMeta.ts`               |
+| RSS Feed           | Auto-generated            | `src/pages/rss.xml.ts`                   |
+| Sitemap            | Auto-generated            | `@astrojs/sitemap`                       |
 
 ---
 
@@ -720,6 +732,7 @@ export default defineConfig({
 1. Create directory: `src/content/articles/your-article-slug/`
 2. Create file: `index.mdx`
 3. Add frontmatter:
+
 ```yaml
 ---
 isDraft: false
@@ -727,15 +740,15 @@ isMainHeadline: false
 isSubHeadline: false
 title: Your Article Title
 description: Article description for SEO
-cover: '@assets/images/articles/your-article-slug/cover.avif'
+cover: "@assets/images/articles/your-article-slug/cover.avif"
 category: technology
 publishedTime: 2024-01-15T10:00:00.000Z
 authors:
   - author-slug
 ---
-
 Article content here...
 ```
+
 4. Add cover image to `src/assets/images/articles/your-article-slug/cover.avif`
 5. Commit changes
 
@@ -746,6 +759,7 @@ Article content here...
 ### Article Not Showing Up
 
 Check:
+
 - `isDraft` is set to `false`
 - `publishedTime` is not in the future
 - Article is committed to git
@@ -756,6 +770,7 @@ Check:
 ### Images Not Loading
 
 Check:
+
 - Image path uses `@assets/images/` prefix
 - Image file exists in `src/assets/images/`
 - Image format is supported (AVIF, WebP, PNG, JPG)

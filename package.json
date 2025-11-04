@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "build:search": "pnpm run build && pagefind --site dist",
+    "build:search": "bun run build && pagefind --site dist",
     "preview": "astro preview",
     "astro": "astro"
   },
