@@ -1,5 +1,5 @@
 ---
-import Menu from "@/assets/svgs/menu.astro";
+import { Icon } from 'astro-icon/components';
 import { NAVIGATION_LINKS, OTHER_LINKS } from "@/lib/config";
 ---
 
@@ -10,7 +10,7 @@ import { NAVIGATION_LINKS, OTHER_LINKS } from "@/lib/config";
     class="btn btn-ghost btn-circle"
     aria-label="Menu"
   >
-    <Menu />
+    <Icon name="mdi:menu" />
   </button>
 
   <ul

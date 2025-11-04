@@ -1,6 +1,7 @@
 ---
 import type { Covid19Entry } from "@/lib/handlers/covid19";
 import { getPrefectureName } from "@/lib/utils/prefecture";
+import { Icon } from 'astro-icon/components';
 
 type Props = {
   article: Covid19Entry;
@@ -53,9 +54,7 @@ const prefectureName = getPrefectureName(data.prefecture);
   <div class="card-body relative z-10">
     <!-- 日付 -->
     <div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-2">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-      </svg>
+      <Icon name="mdi:calendar" class="h-4 w-4" />
       <time datetime={date.toISOString()} class="font-medium">
         {year}年{month}月{day}日
       </time>
@@ -81,9 +80,7 @@ const prefectureName = getPrefectureName(data.prefecture);
       >
         <span class="relative z-10 flex items-center gap-2">
           グラフを見る
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transform group-hover/btn:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-          </svg>
+          <Icon name="mdi:chevron-right" class="h-4 w-4 transform group-hover/btn:translate-x-1 transition-transform duration-300" />
         </span>
       </a>
       
@@ -95,9 +92,7 @@ const prefectureName = getPrefectureName(data.prefecture);
         data-title={data.title}
         data-text={data.description}
       >
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
-        </svg>
+        <Icon name="mdi:share-variant" class="h-5 w-5" />
       </button>
     </div>
   </div>

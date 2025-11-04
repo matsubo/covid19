@@ -1,8 +1,5 @@
 ---
-import ArrowLeftDouble from "@/assets/svgs/arrow-left-double.astro";
-import ArrowRightDouble from "@/assets/svgs/arrow-right-double.astro";
-import ArrowLeft01 from "@/assets/svgs/arrow-left-01.astro";
-import ArrowRight01 from "@/assets/svgs/arrow-right-01.astro";
+import { Icon } from 'astro-icon/components';
 
 type Props = {
   length: number;
@@ -44,7 +41,7 @@ const paginationList = Array.from(
     {
       `${baseUrl}/1` == `${currentUrl}` ? (
         <button class="join-item btn btn-sm btn-disabled" aria-label="最初のページ" disabled>
-          <ArrowLeftDouble />
+          <Icon name="mdi:chevron-double-left" />
         </button>
       ) : (
         <a
@@ -52,7 +49,7 @@ const paginationList = Array.from(
           class="join-item btn btn-sm"
           aria-label="最初のページ"
         >
-          <ArrowLeftDouble />
+          <Icon name="mdi:chevron-double-left" />
         </a>
       )
     }
@@ -60,11 +57,11 @@ const paginationList = Array.from(
     {
       prevUrl ? (
         <a href={prevUrl} class="join-item btn btn-sm gap-2">
-          <ArrowLeft01 /> <span class="hidden md:inline">前へ</span>
+          <Icon name="mdi:chevron-left" /> <span class="hidden md:inline">前へ</span>
         </a>
       ) : (
         <button class="join-item btn btn-sm btn-disabled gap-2" disabled>
-          <ArrowLeft01 /> <span class="hidden md:inline">前へ</span>
+          <Icon name="mdi:chevron-left" /> <span class="hidden md:inline">前へ</span>
         </button>
       )
     }
@@ -88,11 +85,11 @@ const paginationList = Array.from(
     {
       !nextUrl ? (
         <button class="join-item btn btn-sm btn-disabled gap-2" disabled>
-          <span class="hidden md:inline">次へ</span> <ArrowRight01 />
+          <span class="hidden md:inline">次へ</span> <Icon name="mdi:chevron-right" />
         </button>
       ) : (
         <a href={nextUrl} class="join-item btn btn-sm gap-2">
-          <span class="hidden md:inline">次へ</span> <ArrowRight01 />
+          <span class="hidden md:inline">次へ</span> <Icon name="mdi:chevron-right" />
         </a>
       )
     }
@@ -100,11 +97,11 @@ const paginationList = Array.from(
     {
       lastUrl == currentUrl ? (
         <button class="join-item btn btn-sm btn-disabled" aria-label="最後のページ" disabled>
-          <ArrowRightDouble />
+          <Icon name="mdi:chevron-double-right" />
         </button>
       ) : (
         <a href={lastUrl} class="join-item btn btn-sm" aria-label="最後のページ">
-          <ArrowRightDouble />
+          <Icon name="mdi:chevron-double-right" />
         </a>
       )
     }

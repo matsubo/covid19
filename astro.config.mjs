@@ -7,6 +7,8 @@ import { modifiedTime, readingTime } from "./src/lib/utils/remarks.mjs";
 import { SITE } from "./src/lib/config";
 import { loadEnv } from "vite";
 
+import icon from "astro-icon";
+
 // https://astro.build/config
 export default defineConfig({
   site: SITE.url,
@@ -22,7 +24,7 @@ export default defineConfig({
     responsiveStyles: true,
     breakpoints: [640, 1024],
   },
-  integrations: [mdx(), sitemap()],
+  integrations: [mdx(), sitemap(), icon()],
   vite: {
     plugins: [tailwindcss()],
   },

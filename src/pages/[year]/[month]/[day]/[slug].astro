@@ -4,6 +4,7 @@ import DataChart from "@/components/covid19/DataChart.astro";
 import { getCollection } from "astro:content";
 import { getPrefectureName } from "@/lib/utils/prefecture";
 import { covid19Handler } from "@/lib/handlers/covid19";
+import { Icon } from 'astro-icon/components';
 
 export async function getStaticPaths() {
   const allArticles = await getCollection("covid19");
@@ -192,9 +193,7 @@ const dayListUrl = `/${year}/${month}/${day}`;
     <nav class="mt-8 flex justify-between items-center gap-4">
       {prevUrl ? (
         <a href={prevUrl} class="btn btn-outline flex-1">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-          </svg>
+          <Icon name="mdi:chevron-left" class="w-5 h-5" />
           前の日
         </a>
       ) : (
@@ -203,9 +202,7 @@ const dayListUrl = `/${year}/${month}/${day}`;
       {nextUrl ? (
         <a href={nextUrl} class="btn btn-outline flex-1 flex-row-reverse">
           次の日
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-          </svg>
+          <Icon name="mdi:chevron-right" class="w-5 h-5" />
         </a>
       ) : (
         <div class="flex-1"></div>
@@ -226,16 +223,7 @@ const dayListUrl = `/${year}/${month}/${day}`;
             class="btn btn-circle btn-sm"
             aria-label="Twitterでシェア"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              class="w-5 h-5"
-            >
-              <path
-                d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
-              ></path>
-            </svg>
+            <Icon name="mdi:twitter" class="w-5 h-5" />
           </a>
         </div>
       </div>

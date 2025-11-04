@@ -1,6 +1,5 @@
 ---
-import Moon from "@/assets/svgs/moon.astro";
-import Sun from "@/assets/svgs/sun.astro";
+import { Icon } from 'astro-icon/components';
 ---
 
 <label class="btn btn-ghost btn-circle swap swap-rotate" for="theme-controller">
@@ -12,8 +11,8 @@ import Sun from "@/assets/svgs/sun.astro";
     id="theme-controller"
   />
 
-  <Sun />
-  <Moon />
+    <Icon name="mdi:white-balance-sunny" />
+    <Icon name="mdi:moon-waning-crescent" />
 
   <span class="sr-only">Toggle theme</span>
 </label>

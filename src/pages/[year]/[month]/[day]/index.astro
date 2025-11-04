@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "@/layouts/base.astro";
 import ArticleCard from "@/components/covid19/ArticleCard.astro";
+import { Icon } from 'astro-icon/components';
 
 export async function getStaticPaths() {
   const allArticles = await getCollection("covid19");
@@ -151,9 +152,7 @@ const meta = {
         href={prevDateStr}
         class="btn btn-outline btn-sm gap-2"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-        </svg>
+        <Icon name="mdi:chevron-left" class="h-4 w-4" />
         前日 ({prevDate.getMonth() + 1}/{prevDate.getDate()})
       </a>
       
@@ -162,9 +161,7 @@ const meta = {
         class="btn btn-outline btn-sm gap-2"
       >
         翌日 ({nextDate.getMonth() + 1}/{nextDate.getDate()})
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-        </svg>
+        <Icon name="mdi:chevron-right" class="h-4 w-4" />
       </a>
     </div>
 

@@ -4,6 +4,7 @@ This document explains how articles are managed in the Astro News repository.
 
 ## Table of Contents
 
+- [Development Setup](#development-setup)
 - [Content Structure](#content-structure)
 - [Content Layer Configuration](#content-layer-configuration)
 - [Article Schema](#article-schema)
@@ -11,6 +12,68 @@ This document explains how articles are managed in the Astro News repository.
 - [Categories System](#categories-system)
 - [Special Features](#special-features)
 - [Configuration](#configuration)
+
+---
+
+## Development Setup
+
+### Package Manager
+
+This project uses **Bun** as the package manager, not pnpm or npm.
+
+### Installation
+
+```bash
+# Install dependencies
+bun install
+
+# Add new packages
+bun add <package-name>
+
+# Add dev dependencies
+bun add -d <package-name>
+
+# Remove packages
+bun remove <package-name>
+```
+
+### Available Scripts
+
+```bash
+# Start development server
+bun run dev
+
+# Build for production
+bun run build
+
+# Build and generate search index
+bun run build:search
+
+# Preview production build
+bun run preview
+```
+
+### Icon System
+
+This project uses `astro-icon` with Material Design Icons (MDI):
+
+```bash
+# MDI icons are already installed
+# Icon package: @iconify-json/mdi
+```
+
+Usage in Astro components:
+
+```astro
+---
+import { Icon } from "astro-icon/components";
+---
+
+<Icon name="mdi:chart-bar" class="h-6 w-6" />
+<Icon name="mdi:heart" class="h-5 w-5 text-red-500" />
+```
+
+Browse available icons at: https://icon-sets.iconify.design/mdi/
 
 ---
 

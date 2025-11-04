@@ -1,9 +1,5 @@
 ---
-import Clipboard from "@/assets/svgs/clipboard.astro";
-import Facebook from "@/assets/svgs/facebook.astro";
-import Linkedin from "@/assets/svgs/linkedin.astro";
-import Twitter from "@/assets/svgs/twitter.astro";
-import Whatsapp from "@/assets/svgs/whatsapp.astro";
+import { Icon } from 'astro-icon/components';
 
 type Props = {
   className: string;
@@ -17,16 +13,16 @@ type Props = {
 const { className, title, dataAwSocialShare, dataAwUrl, dataAwText, icon } =
   Astro.props;
 
-// Optimize icon mapping with better performance
+// Map social icons to MDI icon names
 const iconMap = {
-  clipboard: Clipboard,
-  facebook: Facebook,
-  linkedin: Linkedin,
-  twitter: Twitter,
-  whatsapp: Whatsapp,
+  clipboard: "mdi:clipboard-outline",
+  facebook: "mdi:facebook",
+  linkedin: "mdi:linkedin",
+  twitter: "mdi:twitter",
+  whatsapp: "mdi:whatsapp",
 } as const;
 
-const Icon = iconMap[icon];
+const iconName = iconMap[icon];
 
 // Pre-build class list for better performance
 const buttonClasses = [
@@ -58,7 +54,7 @@ const buttonClasses = [
   type="button"
 >
   <span class="shareIcon" aria-hidden="true">
-    <Icon />
+    <Icon name={iconName} />
   </span>
 </button>
 

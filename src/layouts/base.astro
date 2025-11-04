@@ -3,6 +3,7 @@ import { SITE } from "@/lib/config";
 import Head from "@/components/bases/head.astro";
 import Header from "@/components/shared/header.astro";
 import Footer from "@/components/shared/footer.astro";
+import { Icon } from 'astro-icon/components';
 
 type Props = {
   entry: {
@@ -47,9 +48,7 @@ const meta = entry.meta;
       class="fixed bottom-8 right-8 z-50 btn btn-circle btn-primary shadow-2xl opacity-0 pointer-events-none transition-all duration-300 hover:scale-110"
       aria-label="ページトップへ戻る"
     >
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
-      </svg>
+      <Icon name="mdi:arrow-up" class="h-6 w-6" />
     </button>
 
     <script>
