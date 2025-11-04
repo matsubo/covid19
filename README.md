@@ -1,90 +1,100 @@
-# Astro News 📰
+# COVID-19 Data Visualization 📊
 
-A news website built with Astro, designed to provide a modern and responsive news reading experience.
+日本国内の COVID-19 感染状況を可視化する Web サイトです。都道府県別のデータや時系列データをグラフで分かりやすく表示します。
 
-> **ℹ️ Info**  
-> Astro news is my first open-source project, so there may be some bugs or issues. I’ll address them as quickly as possible.
+## 🌐 デモ
 
-![Astro News](./src/assets/images/screenshot-astronews.png "Astro News")
+ライブサイト: [COVID-19 Data Visualization](https://your-site-url.com)
 
-![performances](./src/assets/images/Performances.png "Performances")
+## 🚀 セットアップ
 
-## 🌐 Demo
-
-Explore the live demo here: [**Live Demo**](https://astro-news-six.vercel.app/)
-
-## 🚀 Installation
-
-Follow the steps below to set up and run the project locally:
-
-### Clone the Repository
+### リポジトリのクローン
 
 ```bash
-git clone https://github.com/Mrahmani71/astro-news.git
+git clone https://github.com/matsubo/covid19.git
+cd covid19
 ```
 
-### Install Dependencies
-
-``` bash
-pnpm install
-```
-
-### Run Development Server
+### 依存関係のインストール
 
 ```bash
-pnpm run dev
+bun install
 ```
 
-## ✨ Features
+### 開発サーバーの起動
 
-### Implemented Features
+```bash
+bun run dev
+```
 
-- Content Layer
-- Navigation
-- Responsive Design
-- Pagination
-- Search Functionality
-- RSS Feed
-- Sitemap
-- Dark Mode
-- SEO Optimization (~)
+### ビルド
 
-### Upcoming Features
+```bash
+bun run build
+```
 
-- Open Graph (OG) Image Generation
+## ✨ 機能
 
-## 💻 Technologies
+### 実装済み機能
 
-This project leverages cutting-edge web technologies:
+- **都道府県別データ表示** - 各都道府県の COVID-19 感染状況を可視化
+- **時系列データのグラフ化** - 感染者数の推移をチャートで表示
+- **歴史的データアーカイブ** - 2020 年から 2022 年までの記事とデータ
+- **レスポンシブデザイン** - モバイル・タブレット・デスクトップ対応
+- **ダークモード** - ライト/ダークテーマの切り替え
+- **検索機能** - データや記事の検索
+- **SEO 最適化** - サイトマップ、RSS フィード対応
 
-- [Astro V5.7](https://astro.build) - Modern static site builder
-- [Tailwind CSS](https://tailwindcss.com) - Utility-first CSS framework
-- [DaisyUI](https://daisyui.com/) - Tailwind CSS component library
-- [TypeScript](https://typescriptlang.org) - Typed JavaScript
-- [MDX](https://mdxjs.com) - Markdown with JSX support
-- [pnpm](https://pnpm.io) - Fast, disk space efficient package manager
-- [Vercel](https://vercel.com) - Deployment platform
-- [HugeIcons](https://hugeicons.com) - Icon library
+### データソース
 
-## 💡  Inspirations and Code Concepts
+- 都道府県別感染者データ（JSON 形式）
+- 歴史的記事とデータ（Markdown 形式）
+- グラフ画像とビジュアライゼーション
 
-This project draws inspiration from the following sources:
+## 💻 技術スタック
 
-### Designs
+- [Astro V5](https://astro.build) - 静的サイトジェネレーター
+- [Tailwind CSS](https://tailwindcss.com) - CSS フレームワーク
+- [DaisyUI](https://daisyui.com/) - Tailwind CSS コンポーネントライブラリ
+- [TypeScript](https://typescriptlang.org) - 型付き JavaScript
+- [Astro Icon](https://github.com/natemoo-re/astro-icon) - MDI アイコン
+- [Bun](https://bun.sh) - 高速な JavaScript ランタイム＆パッケージマネージャー
 
-- [BBC News](https://www.bbc.com)
-- [NewsHub - News Website](https://dribbble.com/shots/21678041-NewsHub-News-Website)
-- [Let'sread - News Landing Page](https://dribbble.com/shots/24675325-Let-sread-News-Landing-Page)
+## 📁 プロジェクト構造
 
-### Articles
+```
+covid19/
+├── src/
+│   ├── content/
+│   │   ├── covid19/          # COVID-19関連記事（年/月別）
+│   │   ├── prefectures/      # 都道府県別データ（JSON）
+│   │   └── views/            # ページコンテンツ
+│   ├── components/
+│   │   ├── covid19/          # COVID-19専用コンポーネント
+│   │   ├── cards/            # カードコンポーネント
+│   │   └── shared/           # 共有コンポーネント
+│   ├── pages/
+│   │   ├── prefecture/       # 都道府県別ページ
+│   │   ├── [year]/           # 年別アーカイブ
+│   │   └── archives/         # 記事一覧
+│   └── lib/
+│       ├── handlers/         # データ処理
+│       └── utils/            # ユーティリティ関数
+└── public/
+    └── images/               # グラフ画像とアセット
+```
 
-- [Creating A Pagination Component With Astro](https://rimdev.io/creating-a-pagination-component-with-astro)
-- [Adding search to static Astro sites](https://website-thomas-astro.vercel.app/blog/search-static-astro-website)
+## 📄 ライセンス
 
-## 📄 License
+このプロジェクトは[MIT ライセンス](LICENSE.md)の下でオープンソース化されています。
 
-Open sourced under the [MIT license](LICENSE.md).
+- オリジナルテンプレート: Copyright (c) 2024 [Mohammad Rahmani](https://github.com/Mrahmani71/astro-news)
+- COVID-19 データ可視化の実装と改変: Copyright (c) 2025 matsubo
 
-## 🤝 Contributing
+## 🤝 コントリビューション
 
-Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/Mrahmani71/astro-news/issues).
+バグ報告、機能リクエスト、プルリクエストを歓迎します！
+
+## 📝 注意事項
+
+このサイトで提供されるデータは情報提供を目的としています。最新の正確な情報については、公式の保健当局の発表をご確認ください。
