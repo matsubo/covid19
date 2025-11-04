@@ -13,18 +13,23 @@ type Props = {
 
 const { entry } = Astro.props;
 const meta = entry.meta;
+
+// Google Tag Manager ID from environment variable
+const GTM_ID = import.meta.env.PUBLIC_GTM_ID;
 ---
 
 <!doctype html>
 <html lang={SITE.locale} dir={SITE.dir} class="scroll-smooth">
   <Head meta={meta} />
   <body class="flex flex-col min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
-    <!-- Google Tag Manager (noscript) -->
-    <noscript>
-      <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W9MZW5G"
-        height="0" width="0" style="display:none;visibility:hidden"></iframe>
-    </noscript>
-    <!-- End Google Tag Manager (noscript) -->
+    {GTM_ID && (
+      <!-- Google Tag Manager (noscript) -->
+      <noscript>
+        <iframe src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
+          height="0" width="0" style="display:none;visibility:hidden"></iframe>
+      </noscript>
+      <!-- End Google Tag Manager (noscript) -->
+    )}
 
     <!-- 背景グラデーション装飾 -->
     <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
