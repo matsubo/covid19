@@ -1,10 +1,6 @@
 import { glob } from "astro/loaders";
 import { defineCollection } from "astro:content";
-import {
-  covid19Schema,
-  prefectureSchema,
-  viewSchema,
-} from "@/lib/schema";
+import { covid19Schema, prefectureSchema, viewSchema } from "@/lib/schema";
 
 // COVID-19記事コレクション
 const covid19Collection = defineCollection({
@@ -12,9 +8,9 @@ const covid19Collection = defineCollection({
   schema: covid19Schema,
 });
 
-// 都道府県カテゴリコレクション
+// 都道府県カテゴリコレクション（1つのJSONファイルから読み込み）
 const prefectureCollection = defineCollection({
-  loader: glob({ pattern: "*.json", base: "./src/content/prefectures" }),
+  loader: glob({ pattern: "prefectures.json", base: "./src/content" }),
   schema: prefectureSchema,
 });
 

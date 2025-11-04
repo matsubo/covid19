@@ -52,7 +52,7 @@ export const NAVIGATION_LINKS: Link[] = [
     text: "神奈川県",
   },
   {
-    href: "/prefecture/kouchi",
+    href: "/prefecture/kochi",
     text: "高知県",
   },
   {
@@ -115,10 +115,10 @@ export const OTHER_LINKS: Link[] = [
 export const SOCIAL_LINKS: Link[] = [
   {
     href: "https://matsubo.github.io/",
-    text: "Author"
+    text: "Author",
   },
   {
     href: "https://x.com/matsubokkuri",
-    text: "@matsubokkuri"
+    text: "@matsubokkuri",
   },
 ];

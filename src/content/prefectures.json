@@ -1,0 +1,116 @@
+[
+  {
+    "slug": "tokyo",
+    "title": "東京都",
+    "region": "関東",
+    "count": 672
+  },
+  {
+    "slug": "kanagawa",
+    "title": "神奈川県",
+    "region": "関東",
+    "count": 0
+  },
+  {
+    "slug": "saitama",
+    "title": "埼玉県",
+    "region": "関東",
+    "count": 0
+  },
+  {
+    "slug": "gunma",
+    "title": "群馬県",
+    "region": "関東",
+    "count": 0
+  },
+  {
+    "slug": "hokkaido",
+    "title": "北海道",
+    "region": "北海道",
+    "count": 178
+  },
+  {
+    "slug": "aomori",
+    "title": "青森県",
+    "region": "東北",
+    "count": 0
+  },
+  {
+    "slug": "yamagata",
+    "title": "山形県",
+    "region": "東北",
+    "count": 0
+  },
+  {
+    "slug": "fukui",
+    "title": "福井県",
+    "region": "北陸",
+    "count": 0
+  },
+  {
+    "slug": "ishikawa",
+    "title": "石川県",
+    "region": "北陸",
+    "count": 0
+  },
+  {
+    "slug": "toyama",
+    "title": "富山県",
+    "region": "北陸",
+    "count": 0
+  },
+  {
+    "slug": "gifu",
+    "title": "岐阜県",
+    "region": "中部",
+    "count": 0
+  },
+  {
+    "slug": "mie",
+    "title": "三重県",
+    "region": "中部",
+    "count": 0
+  },
+  {
+    "slug": "nagano",
+    "title": "長野県",
+    "region": "中部",
+    "count": 0
+  },
+  {
+    "slug": "yamaguchi",
+    "title": "山口県",
+    "region": "中国",
+    "count": 0
+  },
+  {
+    "slug": "okayama",
+    "title": "岡山県",
+    "region": "中国",
+    "count": 0
+  },
+  {
+    "slug": "kochi",
+    "title": "高知県",
+    "region": "四国",
+    "count": 0
+  },
+  {
+    "slug": "ehime",
+    "title": "愛媛県",
+    "region": "四国",
+    "count": 0
+  },
+  {
+    "slug": "kumamoto",
+    "title": "熊本県",
+    "region": "九州",
+    "count": 0
+  },
+  {
+    "slug": "fukuoka",
+    "title": "福岡県",
+    "region": "九州",
+    "count": 0
+  }
+]
