@@ -2,6 +2,7 @@
   "name": "covid19",
   "type": "module",
   "version": "1.0.0",
+  "private": true,
   "engines": {
     "bun": ">=1.0.0"
   },
@@ -14,7 +15,7 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.9.5",
-    "@astrojs/mdx": "^4.3.9",
+    "@astrojs/mdx": "^4.3.10",
     "@astrojs/rss": "^4.0.13",
     "@astrojs/sitemap": "^3.6.0",
     "@fontsource-variable/source-serif-4": "^5.2.9",
@@ -22,20 +23,20 @@
     "@iconify-json/mdi": "^1.2.3",
     "@pagefind/default-ui": "^1.4.0",
     "@philnash/astro-pagination": "^0.5.0",
-    "@tailwindcss/vite": "^4.1.16",
-    "astro": "^5.15.3",
+    "@tailwindcss/vite": "^4.1.17",
+    "astro": "^5.15.4",
     "astro-icon": "^1.1.5",
     "astro-pagefind": "^1.8.5",
     "date-fns": "^4.1.0",
     "mdast-util-to-string": "^4.0.0",
     "pagefind": "^1.4.0",
     "reading-time": "^1.5.0",
-    "tailwindcss": "^4.1.16",
+    "tailwindcss": "^4.1.17",
     "typescript": "^5.9.3",
-    "vite": "^7.1.12"
+    "vite": "^7.2.2"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.19",
-    "daisyui": "^5.4.3"
+    "daisyui": "^5.4.7"
   }
 }
