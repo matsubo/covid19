@@ -77,9 +77,11 @@ const meta = {
   title: data.title,
   metaTitle: data.title,
   description: data.description,
-  type: "website" as const,
+  type: "article" as const,
   ogImage: data.coverImage,
   ogImageAlt: data.title,
+  publishedTime: new Date(data.publishedTime).toISOString(),
+  authors: [{ name: "matsubo", link: "matsubo" }],
 };
 
 // 都道府県ページへのリンク
@@ -127,7 +129,7 @@ const dayListUrl = `/${year}/${month}/${day}`;
           {prefectureName}
         </a>
         <time
-          datetime={data.publishedTime}
+          datetime={data.publishedTime instanceof Date ? data.publishedTime.toISOString() : data.publishedTime}
           class="text-gray-500 dark:text-gray-400"
         >
           {year}年{month}月{day}日

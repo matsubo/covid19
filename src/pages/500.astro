@@ -1,0 +1,55 @@
+---
+import Layout from "@/layouts/base.astro";
+import { Icon } from 'astro-icon/components';
+import type { Meta } from "@/lib/types";
+import { SITE } from "@/lib/config";
+
+const meta: Meta = {
+  title: `500 - サーバーエラー | ${SITE.title}`,
+  metaTitle: `500 - サーバーエラー`,
+  description: "サーバー内部でエラーが発生しました",
+  type: "website",
+  ogImage: "/images/default-image.jpg",
+  ogImageAlt: "500エラー",
+};
+
+const entry = {
+  meta,
+};
+---
+
+<Layout entry={entry}>
+  <main class="container mx-auto px-4 py-16">
+    <div class="max-w-2xl mx-auto text-center">
+      <div class="mb-8">
+        <Icon name="mdi:alert-circle-outline" class="w-48 h-48 mx-auto text-gray-300 dark:text-gray-700" />
+      </div>
+
+      <h1 class="text-6xl font-bold text-gray-900 dark:text-gray-100 mb-4">500</h1>
+      <p class="text-2xl font-semibold text-gray-700 dark:text-gray-300 mb-2">
+        サーバーエラー
+      </p>
+      <p class="text-gray-600 dark:text-gray-400 mb-8">
+        サーバー内部でエラーが発生しました。しばらく経ってから再度お試しください。
+      </p>
+
+      <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+        <a
+          href="/"
+          class="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg transition-colors duration-200 inline-flex items-center gap-2"
+        >
+          <Icon name="mdi:home" class="h-5 w-5" />
+          ホームに戻る
+        </a>
+
+        <button
+          onclick="location.reload()"
+          class="px-6 py-3 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-semibold rounded-lg border border-gray-300 dark:border-gray-600 transition-colors duration-200 inline-flex items-center gap-2"
+        >
+          <Icon name="mdi:refresh" class="h-5 w-5" />
+          ページを再読み込み
+        </button>
+      </div>
+    </div>
+  </main>
+</Layout>

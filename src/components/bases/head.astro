@@ -7,6 +7,7 @@ import "@fontsource-variable/source-serif-4";
 import { ClientRouter } from "astro:transitions";
 import { SITE } from "@/lib/config";
 import type { ArticleMeta, Meta } from "@/lib/types";
+import JsonLd from "./json-ld.astro";
 
 type Props = {
   meta: Meta | ArticleMeta;
@@ -51,14 +52,8 @@ const GTM_ID = import.meta.env.PUBLIC_GTM_ID;
   <meta name="apple-mobile-web-app-title" content="COVID-19グラフ" />
   <link rel="manifest" href="/site.webmanifest" />
 
-  <!-- RSS & Sitemap -->
+  <!-- Sitemap -->
   <link rel="sitemap" href="/sitemap-index.xml" />
-  <link
-    rel="alternate"
-    type="application/rss+xml"
-    title={SITE.title}
-    href={new URL("rss.xml", Astro.site)}
-  />
 
   <!-- Canonical URL -->
   <link rel="canonical" href={canonicalURL} />
@@ -111,6 +106,8 @@ const GTM_ID = import.meta.env.PUBLIC_GTM_ID;
       </>
     ) : null
   }
+
+  <JsonLd meta={meta} />
 
   <ClientRouter />
 </head>

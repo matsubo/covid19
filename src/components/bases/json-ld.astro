@@ -1,0 +1,77 @@
+---
+import { SITE } from "@/lib/config";
+import type { ArticleMeta, Meta } from "@/lib/types";
+
+type Props = {
+  meta: Meta | ArticleMeta;
+};
+
+const { meta } = Astro.props;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site).href;
+
+const isArticle = (m: Meta | ArticleMeta): m is ArticleMeta =>
+  m.type === "article";
+
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: SITE.title,
+  url: SITE.url,
+  description: SITE.description,
+};
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "ホーム",
+      item: SITE.url,
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: meta.metaTitle,
+      item: canonicalURL,
+    },
+  ],
+};
+
+const articleSchema = isArticle(meta)
+  ? {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      headline: meta.metaTitle,
+      description: meta.description,
+      image: new URL(meta.ogImage, Astro.url).href,
+      datePublished: new Date(meta.publishedTime).toISOString(),
+      ...(meta.lastModified
+        ? { dateModified: new Date(meta.lastModified).toISOString() }
+        : {}),
+      author: meta.authors.map((author) => ({
+        "@type": "Person",
+        name: author.name,
+        url: `${SITE.url}/authors/${author.link}`,
+      })),
+      publisher: {
+        "@type": "Organization",
+        name: SITE.title,
+        url: SITE.url,
+      },
+      mainEntityOfPage: {
+        "@type": "WebPage",
+        "@id": canonicalURL,
+      },
+    }
+  : null;
+---
+
+<script is:inline type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
+<script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+{
+  articleSchema && (
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  )
+}
