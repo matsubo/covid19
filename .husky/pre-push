@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# Full build verification
+bun run build
