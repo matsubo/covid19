@@ -1,7 +1,7 @@
 import { execSync } from "node:child_process";
 import { statSync } from "node:fs";
-import getReadingTime from "reading-time";
 import { toString as ConvertToString } from "mdast-util-to-string";
+import getReadingTime from "reading-time";
 
 function isGitAvailable() {
   try {
@@ -30,7 +30,7 @@ export function modifiedTime() {
       try {
         const gitResult = execSync(
           `git log -1 --pretty="format:%cI" "${filepath}"`,
-          { stdio: ["ignore", "pipe", "ignore"] }
+          { stdio: ["ignore", "pipe", "ignore"] },
         )
           .toString()
           .trim();

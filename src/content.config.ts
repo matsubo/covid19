@@ -1,5 +1,5 @@
-import { glob } from "astro/loaders";
 import { defineCollection } from "astro:content";
+import { glob } from "astro/loaders";
 import { covid19Schema, prefectureSchema, viewSchema } from "@/lib/schema";
 
 // COVID-19記事コレクション

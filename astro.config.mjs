@@ -1,13 +1,10 @@
-// @ts-check
-import { defineConfig } from "astro/config";
-import tailwindcss from "@tailwindcss/vite";
 import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
-import { modifiedTime, readingTime } from "./src/lib/utils/remarks.mjs";
-import { SITE } from "./src/lib/config";
-import { loadEnv } from "vite";
-
+import tailwindcss from "@tailwindcss/vite";
+import { defineConfig } from "astro/config";
 import icon from "astro-icon";
+import { SITE } from "./src/lib/config";
+import { modifiedTime, readingTime } from "./src/lib/utils/remarks.mjs";
 
 // https://astro.build/config
 export default defineConfig({

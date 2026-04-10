@@ -1,6 +1,6 @@
 import type { APIRoute } from "astro";
-import { covid19Handler } from "@/lib/handlers/covid19";
 import { SITE } from "@/lib/config";
+import { covid19Handler } from "@/lib/handlers/covid19";
 
 export const GET: APIRoute = async () => {
   const baseUrl = SITE.url || "https://covid19.example.com";
@@ -44,7 +44,7 @@ export const GET: APIRoute = async () => {
     <lastmod>${new Date().toISOString()}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
-  </url>`
+  </url>`,
     )
     .join("\n")}
   

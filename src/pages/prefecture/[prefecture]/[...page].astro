@@ -3,7 +3,7 @@ import BaseLayout from "@/layouts/base.astro";
 import ArticleCard from "@/components/covid19/ArticleCard.astro";
 import Pagination from "@/components/shared/pagination.astro";
 import { covid19Handler } from "@/lib/handlers/covid19";
-import { getPrefectureName, isValidPrefecture, getAllPrefectures } from "@/lib/utils/prefecture";
+import { getAllPrefectures } from "@/lib/utils/prefecture";
 import { SITE } from "@/lib/config";
 
 export async function getStaticPaths() {
