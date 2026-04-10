@@ -10,13 +10,13 @@ export const covid19Schema = z.object({
 });
 
 // 都道府県カテゴリのスキーマ（個別アイテム）
-export const prefectureItemSchema = z.object({
+const prefectureItemSchema = z.object({
   title: z.string(), // 日本語名 (東京都, 神奈川県, etc.)
   slug: z
     .string()
     .regex(
       /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
-      "The string must be a slug (only lowercase letters, numbers, and hyphens)."
+      "The string must be a slug (only lowercase letters, numbers, and hyphens).",
     ),
   region: z.string(), // 地方名（関東、東北など）
   count: z.number().optional(), // 記事数（統計用）

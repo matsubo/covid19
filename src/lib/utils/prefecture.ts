@@ -1,30 +1,22 @@
 // 都道府県データをJSONファイルから読み込み
 import prefecturesData from "@/content/prefectures.json";
 
-// 型定義
-interface PrefectureData {
-  slug: string;
-  title: string;
-  region: string;
-  count?: number;
-}
-
 // 都道府県マッピング（英語スラッグ → 日本語名）を生成
-export const PREFECTURE_MAP: Record<string, string> = prefecturesData.reduce(
+const PREFECTURE_MAP: Record<string, string> = prefecturesData.reduce(
   (map, pref) => {
     map[pref.slug] = pref.title;
     return map;
   },
-  {} as Record<string, string>
+  {} as Record<string, string>,
 );
 
 // 都道府県の地方区分マッピングを生成
-export const REGION_MAP: Record<string, string> = prefecturesData.reduce(
+const REGION_MAP: Record<string, string> = prefecturesData.reduce(
   (map, pref) => {
     map[pref.slug] = pref.region;
     return map;
   },
-  {} as Record<string, string>
+  {} as Record<string, string>,
 );
 
 /**

@@ -1,13 +1,3 @@
-import type { CollectionEntry } from "astro:content";
-
-export type Icon = {
-  size?: string;
-  width?: string;
-  height?: string;
-  color?: string;
-  strokeWidth?: string;
-};
-
 export type Link = {
   href: string;
   text: string;
@@ -34,5 +24,3 @@ export type ArticleMeta = Meta & {
   lastModified?: string;
   authors: Author[];
 };
-
-export type Entry = CollectionEntry<"articles" | "views">;

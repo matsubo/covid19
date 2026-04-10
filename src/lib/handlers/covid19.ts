@@ -1,4 +1,4 @@
-import { getCollection, type CollectionEntry } from "astro:content";
+import { type CollectionEntry, getCollection } from "astro:content";
 
 export type Covid19Entry = CollectionEntry<"covid19">;
 
@@ -32,14 +32,17 @@ export const covid19Handler = {
   articlesByPrefecture: async (prefecture: string): Promise<Covid19Entry[]> => {
     const allArticles = await getCovid19Collection();
     return allArticles.filter(
-      (article) => article.data.prefecture === prefecture
+      (article) => article.data.prefecture === prefecture,
     );
   },
 
   /**
    * 年月別に記事を取得
    */
-  articlesByYearMonth: async (year: string, month: string): Promise<Covid19Entry[]> => {
+  articlesByYearMonth: async (
+    year: string,
+    month: string,
+  ): Promise<Covid19Entry[]> => {
     const allArticles = await getCovid19Collection();
     return allArticles.filter((article) => {
       const date = new Date(article.data.publishedTime);
@@ -80,7 +83,10 @@ export const covid19Handler = {
   /**
    * 都道府県別の最新記事を取得
    */
-  latestByPrefecture: async (prefecture: string, limit: number = 5): Promise<Covid19Entry[]> => {
+  latestByPrefecture: async (
+    prefecture: string,
+    limit: number = 5,
+  ): Promise<Covid19Entry[]> => {
     const articles = await covid19Handler.articlesByPrefecture(prefecture);
     return articles.slice(0, limit);
   },
@@ -99,25 +105,29 @@ export const covid19Handler = {
 
     return {
       totalArticles: allArticles.length,
-      prefectureCount: Array.from(prefectures.entries()).map(([prefecture, count]) => ({
-        prefecture,
-        count,
-      })).sort((a, b) => b.count - a.count),
+      prefectureCount: Array.from(prefectures.entries())
+        .map(([prefecture, count]) => ({
+          prefecture,
+          count,
+        }))
+        .sort((a, b) => b.count - a.count),
     };
   },
 
   /**
    * 同じ都道府県の前後の記事を取得
    */
-  adjacentArticles: async (currentArticle: Covid19Entry): Promise<{
+  adjacentArticles: async (
+    currentArticle: Covid19Entry,
+  ): Promise<{
     prev: Covid19Entry | null;
     next: Covid19Entry | null;
   }> => {
     const prefecture = currentArticle.data.prefecture;
-    const currentDate = new Date(currentArticle.data.publishedTime);
 
     // 同じ都道府県の記事を取得して日付順（古い順）にソート
-    const prefectureArticles = await covid19Handler.articlesByPrefecture(prefecture);
+    const prefectureArticles =
+      await covid19Handler.articlesByPrefecture(prefecture);
     const sortedArticles = prefectureArticles.sort((a, b) => {
       const dateA = new Date(a.data.publishedTime);
       const dateB = new Date(b.data.publishedTime);
@@ -126,7 +136,7 @@ export const covid19Handler = {
 
     // 現在の記事のインデックスを見つける
     const currentIndex = sortedArticles.findIndex(
-      (article) => article.id === currentArticle.id
+      (article) => article.id === currentArticle.id,
     );
 
     if (currentIndex === -1) {
@@ -135,7 +145,10 @@ export const covid19Handler = {
 
     return {
       prev: currentIndex > 0 ? sortedArticles[currentIndex - 1] : null,
-      next: currentIndex < sortedArticles.length - 1 ? sortedArticles[currentIndex + 1] : null,
+      next:
+        currentIndex < sortedArticles.length - 1
+          ? sortedArticles[currentIndex + 1]
+          : null,
     };
   },
 };
