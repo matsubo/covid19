@@ -1,4 +1,4 @@
 #!/bin/sh
 
-# Full build verification
-bun run build
+# Light verification only. Full build runs on Cloudflare Pages.
+bun run astro check

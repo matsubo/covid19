@@ -10,10 +10,7 @@ import { modifiedTime, readingTime } from "./src/lib/utils/remarks.mjs";
 export default defineConfig({
   site: SITE.url,
   base: SITE.basePath,
-  prefetch: {
-    prefetchAll: true,
-    defaultStrategy: "viewport",
-  },
+  prefetch: false,
   markdown: {
     remarkPlugins: [readingTime, modifiedTime],
   },
