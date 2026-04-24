@@ -27,48 +27,65 @@ const entry = {
 
     <!-- 検索ボックス -->
     <div class="mb-8">
+      <label for="search-input" class="sr-only">サイト内検索キーワード</label>
       <div class="relative">
         <input
-          type="text"
+          type="search"
           id="search-input"
-          placeholder="キーワードを入力..."
-          class="w-full px-4 py-3 pl-12 pr-12 text-base border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+          name="q"
+          placeholder="例: 東京 2022年8月"
+          autocomplete="off"
+          spellcheck="false"
+          inputmode="search"
+          enterkeyhint="search"
+          class="w-full px-4 py-3 pl-12 pr-12 text-base border-2 border-gray-300 dark:border-gray-600 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
         />
-        <Icon name="mdi:magnify" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500" />
+        <Icon name="mdi:magnify" aria-hidden="true" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500" />
         <button
+          type="button"
           id="clear-button"
           class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 hidden"
-          aria-label="クリア"
+          aria-label="検索キーワードをクリア"
         >
-          <Icon name="mdi:close" class="w-5 h-5" />
+          <Icon name="mdi:close" aria-hidden="true" class="w-5 h-5" />
         </button>
       </div>
     </div>
 
     <!-- 検索状態メッセージ -->
-    <div id="search-status" class="mb-4 text-sm text-gray-600 dark:text-gray-400 hidden"></div>
+    <div id="search-status" role="status" aria-live="polite" class="mb-4 text-sm text-gray-600 dark:text-gray-400 hidden"></div>
 
     <!-- 検索結果 -->
-    <div id="search-results" class="space-y-4"></div>
+    <div id="search-results" aria-live="polite" aria-busy="false" class="space-y-4"></div>
 
     <!-- 初期状態メッセージ -->
     <div id="initial-message" class="text-center py-12 text-gray-500 dark:text-gray-400">
-      <Icon name="mdi:magnify" class="w-16 h-16 mx-auto mb-4 text-gray-300 dark:text-gray-600" />
+      <Icon name="mdi:magnify" aria-hidden="true" class="w-16 h-16 mx-auto mb-4 text-gray-300 dark:text-gray-600" />
       <p class="text-lg">キーワードを入力して検索してください</p>
     </div>
 
     <!-- エラーメッセージ -->
-    <div id="error-message" class="hidden p-6 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+    <div id="error-message" role="alert" class="hidden p-6 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
       <p class="text-yellow-800 dark:text-yellow-200 mb-2"><strong>検索機能が利用できません</strong></p>
       <p class="text-sm text-yellow-700 dark:text-yellow-300">検索機能を使用するには、まずサイトをビルドする必要があります。</p>
       <pre class="mt-2 p-2 bg-yellow-100 dark:bg-yellow-900/40 rounded text-xs">bun run build</pre>
     </div>
   </main>
 
-  <script type="module">
+  <script type="module" is:inline>
     function handlePagefindError() {
       document.getElementById('error-message')?.classList.remove('hidden');
       document.getElementById('initial-message')?.classList.add('hidden');
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>"']/g, (ch) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;',
+      }[ch]));
     }
 
     let pagefind;
@@ -141,7 +158,8 @@ const entry = {
         async function performSearch(query) {
           initialMessage.classList.add('hidden');
           searchStatus.classList.remove('hidden');
-          searchStatus.textContent = '検索中...';
+          searchStatus.textContent = '検索中…';
+          searchResults.setAttribute('aria-busy', 'true');
 
           try {
             const results = await pagefind.search(query);
@@ -149,6 +167,7 @@ const entry = {
             if (results.results.length === 0) {
               searchStatus.textContent = `「${query}」の検索結果が見つかりませんでした`;
               searchResults.innerHTML = '';
+              searchResults.setAttribute('aria-busy', 'false');
               return;
             }
 
@@ -160,28 +179,37 @@ const entry = {
               resultsToShow.map(r => r.data())
             );
 
-            searchResults.innerHTML = resultsData.map(result => `
+            // pagefindのexcerptは<mark>を含むHTMLを返す想定なのでそのまま埋め込む。
+            // title / url / descriptionはユーザー提供由来としてエスケープする。
+            searchResults.innerHTML = resultsData.map(result => {
+              const safeTitle = escapeHtml(result.meta?.title || 'タイトルなし');
+              const safeUrl = escapeHtml(result.url || '');
+              const excerpt = result.excerpt || escapeHtml(result.meta?.description || '');
+              return `
               <article class="p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg hover:shadow-lg transition-shadow duration-200">
-                <a href="${result.url}" class="block group">
+                <a href="${safeUrl}" class="block group">
                   <h3 class="text-xl font-semibold text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 mb-2">
-                    ${result.meta?.title || 'タイトルなし'}
+                    ${safeTitle}
                   </h3>
                   <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                    ${result.excerpt || result.meta?.description || ''}
+                    ${excerpt}
                   </p>
                   <div class="flex items-center text-xs text-gray-500 dark:text-gray-500">
-                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg aria-hidden="true" class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
                     </svg>
-                    ${result.url}
+                    ${safeUrl}
                   </div>
                 </a>
               </article>
-            `).join('');
+            `;
+            }).join('');
+            searchResults.setAttribute('aria-busy', 'false');
 
           } catch (error) {
             searchStatus.textContent = '検索中にエラーが発生しました';
             searchResults.innerHTML = '';
+            searchResults.setAttribute('aria-busy', 'false');
           }
         }
 

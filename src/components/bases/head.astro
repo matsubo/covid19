@@ -109,5 +109,19 @@ const GTM_ID = import.meta.env.PUBLIC_GTM_ID;
 
   <JsonLd meta={meta} />
 
+  <!-- テーマをペイント前に適用してFOUCを回避 -->
+  <script is:inline>
+    (() => {
+      try {
+        const stored = localStorage.getItem('astro-theme');
+        const theme = stored === 'dark' || stored === 'light'
+          ? stored
+          : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+        document.documentElement.style.colorScheme = theme;
+      } catch {}
+    })();
+  </script>
+
   <ClientRouter />
 </head>
