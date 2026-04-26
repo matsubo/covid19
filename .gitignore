@@ -24,3 +24,10 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# aube は bun.lock を読むので独自 lockfile はコミットしない
+aube-lock.yaml
+
+# Playwright
+playwright-report/
+test-results/

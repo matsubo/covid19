@@ -36,8 +36,11 @@ const prefectureName = getPrefectureName(data.prefecture);
       <img
         src={data.coverImage}
         alt={data.title}
+        width="640"
+        height="360"
         class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
         loading="lazy"
+        decoding="async"
       />
       <!-- 画像オーバーレイ -->
       <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>

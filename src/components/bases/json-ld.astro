@@ -18,6 +18,7 @@ const websiteSchema = {
   name: SITE.title,
   url: SITE.url,
   description: SITE.description,
+  inLanguage: SITE.locale,
 };
 
 const breadcrumbSchema = {
@@ -38,6 +39,52 @@ const breadcrumbSchema = {
     },
   ],
 };
+
+const isHome =
+  Astro.url.pathname === "/" || Astro.url.pathname === SITE.basePath;
+
+const datasetSchema = isHome
+  ? {
+      "@context": "https://schema.org",
+      "@type": "Dataset",
+      name: "COVID-19 新規陽性者数（日本、都道府県別、日次）",
+      alternateName: "COVID-19 daily new positive cases in Japan, by prefecture",
+      description:
+        "日本の各都道府県が公開した新型コロナウイルス新規陽性者数を、2020年8月から2022年9月まで日次で集計・グラフ化したアーカイブデータセット。",
+      url: SITE.url,
+      sameAs: SITE.github,
+      keywords: [
+        "COVID-19",
+        "新型コロナウイルス",
+        "新規陽性者数",
+        "日本",
+        "都道府県",
+        "オープンデータ",
+        "時系列",
+      ],
+      isAccessibleForFree: true,
+      license: "https://creativecommons.org/licenses/by/4.0/",
+      temporalCoverage: "2020-08-01/2022-09-26",
+      spatialCoverage: {
+        "@type": "Place",
+        name: "Japan",
+        geo: {
+          "@type": "GeoShape",
+          box: "20 122 46 154",
+        },
+      },
+      creator: {
+        "@type": "Person",
+        name: "matsubo",
+        url: SITE.github,
+      },
+      distribution: {
+        "@type": "DataDownload",
+        encodingFormat: "text/html",
+        contentUrl: `${SITE.url}/archives/1`,
+      },
+    }
+  : null;
 
 const articleSchema = isArticle(meta)
   ? {
@@ -70,8 +117,9 @@ const articleSchema = isArticle(meta)
 
 <script is:inline type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
 <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
-{
-  articleSchema && (
-    <script is:inline type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
-  )
-}
+{datasetSchema && (
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(datasetSchema)} />
+)}
+{articleSchema && (
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+)}

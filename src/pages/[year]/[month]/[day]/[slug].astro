@@ -112,7 +112,13 @@ const dayListUrl = `/${year}/${month}/${day}`;
 ---
 
 <BaseLayout entry={{ meta }}>
-  <article class="container mx-auto px-4 py-12 max-w-4xl" data-pagefind-body>
+  <article
+    class="container mx-auto px-4 py-12 max-w-4xl"
+    data-pagefind-body
+    data-pagefind-filter={`prefecture:${prefectureName}, year:${year}`}
+    data-pagefind-meta={`prefecture:${prefectureName}, year:${year}, month:${month}`}
+    data-pagefind-sort={`date:${data.publishedTime instanceof Date ? data.publishedTime.toISOString() : data.publishedTime}`}
+  >
     <!-- パンくずナビゲーション -->
     <nav class="breadcrumbs text-sm mb-8">
       <ul>
@@ -146,6 +152,7 @@ const dayListUrl = `/${year}/${month}/${day}`;
       src={data.coverImage}
       alt={data.title}
       title="新規陽性者数の推移"
+      loading="eager"
     />
 
     <!-- 同じ日の他の都道府県 -->
@@ -169,11 +176,14 @@ const dayListUrl = `/${year}/${month}/${day}`;
               <div class="card-body p-4 text-center">
                 <h3 class="font-bold text-sm mb-2">{article.prefectureName}</h3>
                 <div class="w-full h-16 overflow-hidden rounded">
-                  <img 
-                    src={article.coverImage} 
+                  <img
+                    src={article.coverImage}
                     alt={article.prefectureName}
+                    width="320"
+                    height="64"
                     class="w-full h-full object-cover"
                     loading="lazy"
+                    decoding="async"
                   />
                 </div>
               </div>

@@ -1,0 +1,31 @@
+name: Lighthouse
+
+# Cloudflare Pagesのデプロイ完了通知をトリガーに本番URLへLighthouseを当てる。
+on:
+  deployment_status
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  lighthouse:
+    if: github.event.deployment_status.state == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Audit URLs
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          urls: |
+            https://covid19.teraren.com/
+            https://covid19.teraren.com/archives/1
+            https://covid19.teraren.com/search/
+            https://covid19.teraren.com/2022/09/26/tokyo-1234/
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+          budgetPath: ./.github/lighthouse-budget.json
+          configPath: ./.github/lighthouserc.json
+        continue-on-error: true
