@@ -28,7 +28,7 @@
     "@fontsource/source-sans-pro": "^5.2.5",
     "@iconify-json/mdi": "^1.2.3",
     "@tailwindcss/vite": "^4.2.4",
-    "astro": "^5.18.1",
+    "astro": "^6.1.9",
     "astro-icon": "^1.1.5",
     "date-fns": "^4.1.0",
     "mdast-util-to-string": "^4.0.0",
