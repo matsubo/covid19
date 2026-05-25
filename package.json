@@ -21,29 +21,29 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.8",
+    "@astrojs/check": "^0.9.9",
     "@astrojs/mdx": "^4.3.14",
     "@astrojs/sitemap": "^3.7.2",
     "@fontsource-variable/source-serif-4": "^5.2.9",
     "@fontsource/source-sans-pro": "^5.2.5",
     "@iconify-json/mdi": "^1.2.3",
-    "@tailwindcss/vite": "^4.2.4",
+    "@tailwindcss/vite": "^4.3.0",
     "astro": "^5.18.1",
     "astro-icon": "^1.1.5",
-    "date-fns": "^4.1.0",
+    "date-fns": "^4.2.1",
     "mdast-util-to-string": "^4.0.0",
     "pagefind": "^1.5.2",
     "reading-time": "^1.5.0",
-    "tailwindcss": "^4.2.4",
+    "tailwindcss": "^4.3.0",
     "typescript": "^5.9.3",
-    "vite": "^7.3.2"
+    "vite": "^7.3.3"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.4.12",
-    "@playwright/test": "^1.59.1",
+    "@biomejs/biome": "^2.4.15",
+    "@playwright/test": "^1.60.0",
     "@tailwindcss/typography": "^0.5.19",
-    "daisyui": "^5.5.19",
+    "daisyui": "^5.5.20",
     "husky": "^9.1.7",
-    "vitest": "^4.1.5"
+    "vitest": "^4.1.7"
   }
 }
