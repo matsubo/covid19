@@ -1,7 +1,7 @@
 name: E2E (production smoke)
 
 on:
-  deployment_status
+  deployment_status:
   schedule:
     # 毎週月曜 03:00 UTC（JST 12:00）に本番スモーク
     - cron: "0 3 * * 1"
