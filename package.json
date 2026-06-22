@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build && pagefind --site dist",
+    "build": "bash scripts/build.sh",
     "build:search": "bun run build",
     "preview": "astro preview",
     "astro": "astro",
