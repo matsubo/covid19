@@ -35,8 +35,12 @@ const { articles, currentPage, totalPages, totalArticles } = Astro.props;
 // メタ情報
 const meta = {
   title: "すべてのグラフ - 新型コロナウイルス新規陽性者数の遷移グラフ",
+  metaTitle: "すべてのグラフ",
   description: `新型コロナウイルス新規陽性者数の推移グラフ一覧（全${totalArticles}件）`,
   type: "website" as const,
+  ogImage:
+    articles[0]?.data.coverImage || "/images/2022/09/gruff20220926-1-r4c6mc.png",
+  ogImageAlt: "すべてのグラフ",
 };
 
 // ページネーション用の情報

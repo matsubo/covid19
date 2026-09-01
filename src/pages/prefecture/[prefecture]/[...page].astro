@@ -69,8 +69,12 @@ const {
 // メタ情報
 const meta = {
   title: `${prefectureName}の新型コロナウイルス新規陽性者数グラフ`,
+  metaTitle: `${prefectureName}の新型コロナウイルス新規陽性者数グラフ`,
   description: `${prefectureName}の新型コロナウイルス新規陽性者数の推移グラフ一覧（${totalArticles}件のグラフ）`,
   type: "website" as const,
+  ogImage:
+    articles[0]?.data.coverImage || "/images/2022/09/gruff20220926-1-r4c6mc.png",
+  ogImageAlt: `${prefectureName}の新型コロナウイルス新規陽性者数グラフ`,
 };
 
 // ページネーション用の情報

@@ -41,6 +41,28 @@ test.describe("smoke", () => {
     }
   });
 
+  test("breadcrumb structured data always names every item", async ({
+    page,
+  }) => {
+    for (const path of ["/archives/2", "/prefecture/tokyo/2", "/"]) {
+      await page.goto(path, { waitUntil: "domcontentloaded" });
+
+      const schemas = await page
+        .locator('script[type="application/ld+json"]')
+        .allTextContents();
+      const breadcrumbs = schemas
+        .map((schema) => JSON.parse(schema))
+        .filter((schema) => schema["@type"] === "BreadcrumbList");
+
+      for (const breadcrumb of breadcrumbs) {
+        for (const listItem of breadcrumb.itemListElement) {
+          expect(listItem.name, `${path} breadcrumb item`).toBeTruthy();
+          expect(listItem.item, `${path} breadcrumb item`).toBeTruthy();
+        }
+      }
+    }
+  });
+
   test("404 page is helpful", async ({ page }) => {
     const res = await page.goto("/this-route-does-not-exist");
     expect(res?.status()).toBe(404);

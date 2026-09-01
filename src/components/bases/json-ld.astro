@@ -1,6 +1,7 @@
 ---
 import { SITE } from "@/lib/config";
 import type { ArticleMeta, Meta } from "@/lib/types";
+import { buildBreadcrumbSchema } from "@/lib/utils/jsonld";
 
 type Props = {
   meta: Meta | ArticleMeta;
@@ -21,24 +22,11 @@ const websiteSchema = {
   inLanguage: SITE.locale,
 };
 
-const breadcrumbSchema = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  itemListElement: [
-    {
-      "@type": "ListItem",
-      position: 1,
-      name: "ホーム",
-      item: SITE.url,
-    },
-    {
-      "@type": "ListItem",
-      position: 2,
-      name: meta.metaTitle,
-      item: canonicalURL,
-    },
-  ],
-};
+const breadcrumbSchema = buildBreadcrumbSchema({
+  siteUrl: SITE.url,
+  canonicalUrl: canonicalURL,
+  name: meta.metaTitle || meta.title,
+});
 
 const isHome =
   Astro.url.pathname === "/" || Astro.url.pathname === SITE.basePath;
@@ -116,7 +104,9 @@ const articleSchema = isArticle(meta)
 ---
 
 <script is:inline type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
-<script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+{breadcrumbSchema && (
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+)}
 {datasetSchema && (
   <script is:inline type="application/ld+json" set:html={JSON.stringify(datasetSchema)} />
 )}

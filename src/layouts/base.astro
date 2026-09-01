@@ -4,10 +4,11 @@ import Head from "@/components/bases/head.astro";
 import Header from "@/components/shared/header.astro";
 import Footer from "@/components/shared/footer.astro";
 import { Icon } from 'astro-icon/components';
+import type { ArticleMeta, Meta } from "@/lib/types";
 
 type Props = {
   entry: {
-    meta: any;
+    meta: Meta | ArticleMeta;
   };
 };
 
