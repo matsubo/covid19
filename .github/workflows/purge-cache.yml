@@ -1,20 +1,26 @@
 name: Purge Cloudflare Cache on Pages Deploy
 
 # Cloudflare Pagesからのデプロイ状況の通知をトリガーにします
+# deployment_status が届かない環境向けに手動実行も受け付けます
 on:
-  deployment_status
+  deployment_status:
+  workflow_dispatch:
 
 jobs:
   purge-cache:
-    # デプロイが成功(success)した時のみ、このジョブを実行します
-    if: github.event.deployment_status.state == 'success'
+    # デプロイが成功(success)した時、または手動実行の時のみ実行します
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.deployment_status.state == 'success' }}
     
     runs-on: ubuntu-slim
     name: Purge Cloudflare CDN Cache
     steps:
       - name: Purge cache by hostname
         run: |
-          curl -s -X POST "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/purge_cache" \
+          set -eo pipefail
+          response=$(curl -s -X POST "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/purge_cache" \
                -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
                -H "Content-Type: application/json" \
-               --data '{"hosts":["covid19.teraren.com"]}'
+               --data '{"hosts":["covid19.teraren.com"]}')
+          echo "$response"
+          # Cloudflare returns HTTP 200 with "success": false on failure
+          echo "$response" | grep -q '"success":true'
